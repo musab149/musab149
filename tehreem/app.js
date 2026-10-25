@@ -5,7 +5,6 @@
 
 /* ───────────── CONFIG ───────────── */
 const CONFIG = {
-  signature: 'Your husband',      // shown under the letter in chapter six
   music: 'music.mp3',             // drop a song with this name next to index.html and a ▶ button appears
 };
 
@@ -61,7 +60,7 @@ const scenes = $$('.scene');
 const curtain = $('#curtain');
 const dotsEl = $('#dots');
 let cur = -1, busy = false;
-const NIGHT = new Set(['s-duas']);
+const NIGHT = new Set(['s-duas','s-heart']);
 
 scenes.forEach((s, i) => {
   const b = document.createElement('button');
@@ -124,7 +123,7 @@ const enter = {
   's-confessions'(){ resetDeck(); },
   's-duas'(){},
   's-memories'(){ observeReveals(); updateStrip(); },
-  's-heart'(){ $('#sigName').textContent = CONFIG.signature; },
+  's-heart'(){},
   's-finale'(){ resetFinale(); },
 };
 
@@ -273,12 +272,15 @@ deck.addEventListener('pointerup', endDrag);
 deck.addEventListener('pointercancel', endDrag);
 
 /* ───────────── 4 · duas ───────────── */
-const starsEl = $('#stars');
-for (let i = 0; i < 90; i++){
-  const s = document.createElement('i');
-  s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;--t:${2 + Math.random() * 4}s;--dl:${Math.random() * 4}s;transform:scale(${.5 + Math.random()})`;
-  starsEl.appendChild(s);
+function scatterStars(el, n){
+  for (let i = 0; i < n; i++){
+    const s = document.createElement('i');
+    s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;--t:${2 + Math.random() * 4}s;--dl:${Math.random() * 4}s;transform:scale(${.5 + Math.random()})`;
+    el.appendChild(s);
+  }
 }
+scatterStars($('#stars'), 90);
+scatterStars($('#heartStars'), 60);
 const lanternSVG = `<svg viewBox="0 0 46 64" aria-hidden="true">
   <path class="frame" d="M23 2v6M15 8h16M13 14h20l4 6v30l-4 6H13l-4-6V20z"/>
   <path class="glass" d="M14 18h18l3 4v26l-3 4H14l-3-4V22z"/>
@@ -520,16 +522,11 @@ const floaters = $('#floaters');
   d.innerHTML = `<img src="${m.thumb}" alt="" loading="lazy">`;
   floaters.appendChild(d);
 });
-const fStars = $('#finaleStars');
-for (let i = 0; i < 60; i++){
-  const st = document.createElement('i');
-  st.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;--t:${2 + Math.random() * 4}s;--dl:${Math.random() * 4}s;transform:scale(${.5 + Math.random() * 1.2})`;
-  fStars.appendChild(st);
-}
 function resetFinale(){
   candles.forEach(c => c.classList.remove('out'));
-  $('#s-finale').classList.remove('celebrate', 'final');
+  $('#s-finale').classList.remove('celebrate');
   $('#finaleMsg').classList.remove('show');
+  $('#finaleTitle').innerHTML = 'Close your eyes, <em>make a wish</em>';
   $('#finaleSub').textContent = 'Then tap each candle to blow it out.';
 }
 candles.forEach(c => c.addEventListener('click', () => {
@@ -537,19 +534,15 @@ candles.forEach(c => c.addEventListener('click', () => {
   c.classList.add('out');
   const left = candles.filter(x => !x.classList.contains('out')).length;
   $('#finaleSub').textContent = left ? `${left} more…` : 'Your wish is on its way ✦';
-  if (!left) setTimeout(celebrate, 700);
+  if (!left) setTimeout(celebrate, 600);
 }));
-async function celebrate(){
-  const sc = $('#s-finale');
-  sc.classList.add('celebrate');                    // wish step fades out
-  confetti(160);
-  await wait(reduce ? 0 : 900);
-  if (cur !== 6) return;
-  sc.classList.add('final');                        // swap in the final card on the night sky
-  document.body.classList.add('night');
-  window.scrollTo(0, 0);
+function celebrate(){
+  $('#s-finale').classList.add('celebrate');
+  $('#finaleTitle').innerHTML = 'Wish made. <em>Now celebrate.</em>';
   $('#finaleMsg').classList.add('show');
-  setTimeout(() => confetti(200), 500);
+  confetti(220);
+  setTimeout(() => confetti(120), 900);
+  setTimeout(() => $('#finaleMsg').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'center' }), 500);
 }
 $('#moreConfetti').addEventListener('click', () => confetti(180));
 

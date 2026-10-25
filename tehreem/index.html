@@ -234,61 +234,9 @@
 
   <!-- ═════════ 6 · FROM MY HEART ═════════ -->
   <section class="scene scene-heart" data-title="From My Heart" id="s-heart">
-    <div class="orbit orbit-a" aria-hidden="true"><span></span></div>
-    <div class="center-wrap narrow">
-      <p class="eyebrow" data-r style="--d:.2s">Chapter Six · A Letter From My Heart</p>
-      <h2 class="title" data-r style="--d:.35s">Why I made <em>this little world</em></h2>
-
-      <article class="paper unfold">
-        <span class="paper-seal seal-pop" aria-hidden="true">♥</span>
-        <p>I created this little space because sometimes an ordinary message doesn’t feel enough.</p>
-        <p>I wanted to give you something you could explore slowly: a few words, a few duas, and some memories that mean something to us.</p>
-        <p>I know that no website could ever express everything a person feels. But I hope this little surprise reminds you that you are appreciated, that your happiness matters, and that the moments we share are worth holding close.</p>
-        <p>Life won’t always be perfect, and neither will we. But I hope we continue to learn, understand each other, laugh together, and create memories that we’ll look back on with grateful hearts.</p>
-        <p class="urdu-ish"><em>Tumhari khushi mere liye important hai. Meri dua hai ke tum hamesha apni zindagi mein mohabbat, izzat, sukoon aur khushiyan mehsoos karo.</em></p>
-        <p>And thank you for being part of my story.</p>
-        <div class="signoff">
-          <span>Forever yours,</span>
-          <svg viewBox="0 0 260 60" class="sig" aria-hidden="true"><path class="draw" d="M8 40c14-22 26-30 30-24s-12 30-4 30 18-34 26-30-6 26 2 26 14-20 20-20-2 16 6 16 12-14 18-14 0 12 8 12 16-18 30-18 20 10 40 4 30-16 52-14"/></svg>
-          <span class="sig-name" id="sigName">Your husband</span>
-        </div>
-      </article>
-
-      <div class="cta-row center" data-r style="--d:.6s">
-        <button class="btn" data-next>
-          <svg class="gift" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-          Ready for your final surprise?
-        </button>
-      </div>
-      <p class="madewith" data-r style="--d:.8s">Made with love, just for you.</p>
-    </div>
-  </section>
-
-  <!-- ═════════ 7 · FINALE ═════════ -->
-  <section class="scene scene-finale" data-title="The Finale" id="s-finale">
-    <div class="floaters" id="floaters" aria-hidden="true"></div>
-    <div class="stars" id="finaleStars" aria-hidden="true"></div>
-
-    <!-- step 1: make a wish -->
-    <div class="center-wrap finale-wish" id="finaleWish">
-      <p class="eyebrow" data-r style="--d:.2s">Chapter Seven · The Finale</p>
-      <h2 class="title" data-r style="--d:.35s">Close your eyes, <em>make a wish</em></h2>
-      <p class="sub" data-r style="--d:.5s" id="finaleSub">Then tap each candle to blow it out.</p>
-
-      <div class="cake" data-r style="--d:.65s" id="cake">
-        <div class="candles" id="candles">
-          <button class="candle" aria-label="Blow out candle 1"><span class="flame"></span><span class="smoke"></span></button>
-          <button class="candle" aria-label="Blow out candle 2"><span class="flame"></span><span class="smoke"></span></button>
-          <button class="candle" aria-label="Blow out candle 3"><span class="flame"></span><span class="smoke"></span></button>
-        </div>
-        <div class="tier t2"><span class="drip"></span></div>
-        <div class="tier t1"><span class="drip"></span><span class="cake-name">Tehreem</span></div>
-        <div class="plate"></div>
-      </div>
-    </div>
-
-    <!-- step 2: the final card -->
-    <div class="finale-final" id="finaleMsg">
+    <div class="stars" id="heartStars" aria-hidden="true"></div>
+    <div class="heart-glow" aria-hidden="true"></div>
+    <div class="ff">
       <div class="ff-photo">
         <div class="ff-arch"><img src="photos/bride.jpg" alt="Tehreem as a bride, seated in red and gold" loading="lazy"></div>
       </div>
@@ -303,10 +251,44 @@
         <p class="ff-italic">To more memories, more laughter, more duas, and more beautiful chapters ahead.</p>
         <p class="ff-italic">With all my love, always.</p>
         <div class="ff-btns">
-          <button class="ff-btn rose" data-go="5">Read My Letter Again <span aria-hidden="true">💗</span></button>
+          <button class="ff-btn rose" data-go="1">Read My Letter Again <span aria-hidden="true">💗</span></button>
           <button class="ff-btn line" data-go="4">Relive Our Memories</button>
         </div>
-        <button class="ff-more" id="moreConfetti">✦ more confetti</button>
+        <button class="ff-next" data-next>Ready for your final surprise? <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ 7 · FINALE ═════════ -->
+  <section class="scene scene-finale" data-title="The Finale" id="s-finale">
+    <div class="floaters" id="floaters" aria-hidden="true"></div>
+    <div class="center-wrap">
+      <p class="eyebrow" data-r style="--d:.2s" id="finaleEyebrow">Chapter Seven · The Finale</p>
+      <h2 class="title" data-r style="--d:.35s" id="finaleTitle">Close your eyes, <em>make a wish</em></h2>
+      <p class="sub" data-r style="--d:.5s" id="finaleSub">Then tap each candle to blow it out.</p>
+
+      <div class="cake" data-r style="--d:.65s" id="cake">
+        <div class="candles" id="candles">
+          <button class="candle" aria-label="Blow out candle 1"><span class="flame"></span><span class="smoke"></span></button>
+          <button class="candle" aria-label="Blow out candle 2"><span class="flame"></span><span class="smoke"></span></button>
+          <button class="candle" aria-label="Blow out candle 3"><span class="flame"></span><span class="smoke"></span></button>
+        </div>
+        <div class="tier t2"><span class="drip"></span></div>
+        <div class="tier t1"><span class="drip"></span><span class="cake-name">Tehreem</span></div>
+        <div class="plate"></div>
+      </div>
+
+      <div class="finale-msg" id="finaleMsg">
+        <h2 class="display">
+          <span class="script">Happy Birthday</span>
+          <span class="finale-name">my Tehreem</span>
+        </h2>
+        <p class="lede">May this year hold more laughter than you can count, more answered duas than you expected, and more love than you know what to do with. You deserve every bit of it.</p>
+        <div class="cta-row center">
+          <button class="btn" id="moreConfetti">More confetti ✦</button>
+          <button class="btn ghost" data-go="4">See our memories again</button>
+          <button class="btn ghost" data-go="0">Start from the beginning</button>
+        </div>
       </div>
     </div>
   </section>

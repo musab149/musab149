@@ -7,7 +7,7 @@ A birthday experience in seven chapters:
 3. **Confessions**: a swipeable deck of seven confession cards
 4. **Duas**: a night sky with six lanterns to light, then Surah Al-Furqan 25:74 and an *Ameen* button
 5. **Memories**: a cinematic hero, a swipeable filmstrip, a full-bleed spotlight, a scrapbook wall, and a fullscreen viewer with swipe and slideshow
-6. **From My Heart**: the letter, with a wax seal and a hand-drawn signature
+6. **From My Heart**: a birthday card with her bridal portrait in an arch, on a starry plum background
 7. **The Finale**: blow out the candles for confetti and floating photos
 
 ## Run it
@@ -25,7 +25,6 @@ Each chapter has its own URL (`#memories`, `#finale`, …).
 
 All the text lives in `app.js` → `CONFIG`, `MEMORIES`, `CONFESSIONS` and `DUAS`. The letters are in `index.html`.
 
-- **Signature**: set `CONFIG.signature` (it currently says "Your husband").
 - **Music**: put a song named `music.mp3` next to `index.html`. A ▶ button then appears in the header, and the music starts when she taps "Open your surprise".
 - **More photos**: add `photos/pNN.jpg` (about 1800px) and `photos/pNN-sm.jpg` (about 720px), then add `{ src:'pNN', cap:'…' }` to `MEMORIES`.
 - **Videos**: add `{ src:'pNN', video:'videos/clip.mp4', cap:'…' }`. The wall shows a play badge and the viewer plays it.
