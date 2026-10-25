@@ -22,13 +22,10 @@ const MEMORIES = [
   { src:'p05', cap:'City lights at night couldn’t compete.' },
   { src:'p10', cap:'Winter coats, warm hearts.' },
   { src:'p12', cap:'Soft colours, softer heart.' },
-  { src:'p14', cap:'Simply you, and simply beautiful.' },
 ].map(m => ({ ...m, full:`photos/${m.src}.jpg`, thumb:`photos/${m.src}-sm.jpg` }));
 
 const CONFESSIONS = [
-  { t:'I still get nervous around you.', p:'Sometimes I look at you and completely forget what I was about to say. After all this time, my heart still hasn’t learned to stay calm.' },
   { t:'Your smile is my favourite place.', p:'On my tiredest days, one smile from you resets everything. I don’t think you know how much power you have over my mood.' },
-  { t:'I notice the little things.', p:'The way you care for everyone before yourself. The way you remember what matters to people. I see it, all of it, and I admire you for it.' },
   { t:'You make ordinary days feel like Eid.', p:'Chai, small talk, a walk, a silly joke. With you, the simplest moments feel like something worth celebrating.' },
   { t:'I’m proud of you.', p:'For your strength, your patience, your heart, and for every quiet battle you’ve won that nobody else saw.' },
   { t:'I don’t say thank you enough.', p:'For your duas, for your patience with me, for making a house feel like home. Thank you, truly, from the deepest part of me.' },

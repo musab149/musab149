@@ -4,7 +4,7 @@ A birthday experience in seven chapters:
 
 1. **The Surprise**: an arch of rotating photos, the birthday greeting, and a "send a hug" button
 2. **A Little Note**: a sealed envelope; tap the wax seal to open it
-3. **Confessions**: a swipeable deck of seven confession cards
+3. **Confessions**: a swipeable deck of five confession cards
 4. **Duas**: a night sky with six lanterns to light, then Surah Al-Furqan 25:74 and an *Ameen* button
 5. **Memories**: a cinematic hero, a swipeable filmstrip, a full-bleed spotlight, a scrapbook wall, and a fullscreen viewer with swipe and slideshow
 6. **From My Heart**: a birthday card with her bridal portrait in an arch, on a starry plum background

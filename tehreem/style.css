@@ -301,10 +301,26 @@ body.night .back{background:rgba(36,18,26,.7);color:var(--cream);border-color:rg
 .mem-hero{position:relative;min-height:92vh;min-height:92svh;display:flex;align-items:flex-end;justify-content:center;
   padding:calc(var(--head) + 40px) var(--gut) 12vh;color:var(--cream);text-align:center;overflow:hidden}
 .mem-hero-bg{position:absolute;inset:0}
-.mem-hero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;animation:kb 22s ease-in-out infinite alternate}
+.mem-hero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;animation:kb 22s ease-in-out infinite alternate}
 .mem-hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(36,18,26,.55) 0%,rgba(36,18,26,.25) 35%,rgba(36,18,26,.85) 85%,var(--bg) 100%)}
 .mem-hero-copy{position:relative;max-width:760px;display:flex;flex-direction:column;align-items:center}
 .mem-hero .display{font-size:clamp(44px,8vw,96px)}
+.mem-hero-inner{position:relative;width:100%;display:flex;justify-content:center}
+.mem-hero-frame{display:none;margin:0}
+/* wide screens: blurred backdrop + the full portrait framed beside the words, so her face is never cropped or covered */
+@media (min-width:821px){
+  .mem-hero{align-items:center;padding-bottom:calc(40px + 4vh)}
+  .mem-hero{background:radial-gradient(ellipse 60% 70% at 75% 45%,#6A3346 0%,rgba(106,51,70,0) 70%),linear-gradient(160deg,#4A2232,#2E1520)}
+  .mem-hero-bg img{filter:blur(40px) saturate(1.2);opacity:.28;transform:scale(1.2);animation:none}
+  .mem-hero-bg::after{background:linear-gradient(to bottom,rgba(36,18,26,.35) 0%,rgba(36,18,26,.2) 50%,rgba(36,18,26,.6) 88%,var(--bg) 100%)}
+  .mem-hero .display{font-size:clamp(46px,5.2vw,80px)}
+  .mem-hero-inner{max-width:1160px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:clamp(32px,6vw,90px);align-items:center}
+  .mem-hero-copy{align-items:flex-start;text-align:left;max-width:680px}
+  .mem-hero-copy .lede{margin-left:0}
+  .mem-hero-frame{display:block;justify-self:center;width:min(100%,380px);padding:10px;border-radius:22px;border:1px solid rgba(228,203,155,.4);
+    background:rgba(250,247,242,.04);box-shadow:0 50px 90px -40px rgba(0,0,0,.75);rotate:2deg}
+  .mem-hero-frame img{width:100%;aspect-ratio:3/4;max-height:68vh;object-fit:cover;object-position:50% 25%;border-radius:14px}
+}
 @keyframes kb{from{transform:scale(1.05) translate(0,0)}to{transform:scale(1.18) translate(-2%,-2%)}}
 .scroll-cue{margin-top:34px;width:24px;height:40px;border:1px solid rgba(250,247,242,.6);border-radius:14px;position:relative}
 .scroll-cue span{position:absolute;left:50%;top:8px;width:3px;height:8px;margin-left:-1.5px;border-radius:2px;background:var(--cream);animation:cue 1.8s ease-in-out infinite}
