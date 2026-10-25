@@ -267,9 +267,12 @@
   <!-- ═════════ 7 · FINALE ═════════ -->
   <section class="scene scene-finale" data-title="The Finale" id="s-finale">
     <div class="floaters" id="floaters" aria-hidden="true"></div>
-    <div class="center-wrap">
-      <p class="eyebrow" data-r style="--d:.2s" id="finaleEyebrow">Chapter Seven · The Finale</p>
-      <h2 class="title" data-r style="--d:.35s" id="finaleTitle">Close your eyes, <em>make a wish</em></h2>
+    <div class="stars" id="finaleStars" aria-hidden="true"></div>
+
+    <!-- step 1: make a wish -->
+    <div class="center-wrap finale-wish" id="finaleWish">
+      <p class="eyebrow" data-r style="--d:.2s">Chapter Seven · The Finale</p>
+      <h2 class="title" data-r style="--d:.35s">Close your eyes, <em>make a wish</em></h2>
       <p class="sub" data-r style="--d:.5s" id="finaleSub">Then tap each candle to blow it out.</p>
 
       <div class="cake" data-r style="--d:.65s" id="cake">
@@ -282,18 +285,28 @@
         <div class="tier t1"><span class="drip"></span><span class="cake-name">Tehreem</span></div>
         <div class="plate"></div>
       </div>
+    </div>
 
-      <div class="finale-msg" id="finaleMsg">
-        <h2 class="display">
-          <span class="script">Happy Birthday</span>
-          <span class="finale-name">my Tehreem</span>
-        </h2>
-        <p class="lede">May this year hold more laughter than you can count, more answered duas than you expected, and more love than you know what to do with. You deserve every bit of it.</p>
-        <div class="cta-row center">
-          <button class="btn" id="moreConfetti">More confetti ✦</button>
-          <button class="btn ghost" data-go="4">See our memories again</button>
-          <button class="btn ghost" data-go="0">Start from the beginning</button>
+    <!-- step 2: the final card -->
+    <div class="finale-final" id="finaleMsg">
+      <div class="ff-photo">
+        <div class="ff-arch"><img src="photos/bride.jpg" alt="Tehreem as a bride, seated in red and gold" loading="lazy"></div>
+      </div>
+      <div class="ff-copy">
+        <p class="ff-eyebrow">Happy Birthday</p>
+        <h2 class="ff-title">Happy Birthday,<br>Tehreem. <span class="ff-heart beat" aria-hidden="true">❤️</span></h2>
+        <p>May this new chapter of your life be filled with beautiful surprises, meaningful moments, peaceful days, and dreams that slowly become reality.</p>
+        <p>May Allah always bless you with happiness, health, protection, and endless barakah.</p>
+        <p>Aur meri taraf se ek choti si wish: tumhari muskurahat hamesha salamat rahe, aur tumhein zindagi mein woh sab mile jo tumhare dil ke liye acha ho.</p>
+        <p>Today is your day. Enjoy every little moment of it.</p>
+        <p>You deserve to feel special — today, tomorrow, and beyond.</p>
+        <p class="ff-italic">To more memories, more laughter, more duas, and more beautiful chapters ahead.</p>
+        <p class="ff-italic">With all my love, always.</p>
+        <div class="ff-btns">
+          <button class="ff-btn rose" data-go="5">Read My Letter Again <span aria-hidden="true">💗</span></button>
+          <button class="ff-btn line" data-go="4">Relive Our Memories</button>
         </div>
+        <button class="ff-more" id="moreConfetti">✦ more confetti</button>
       </div>
     </div>
   </section>

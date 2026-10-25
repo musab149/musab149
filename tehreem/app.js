@@ -520,11 +520,16 @@ const floaters = $('#floaters');
   d.innerHTML = `<img src="${m.thumb}" alt="" loading="lazy">`;
   floaters.appendChild(d);
 });
+const fStars = $('#finaleStars');
+for (let i = 0; i < 60; i++){
+  const st = document.createElement('i');
+  st.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;--t:${2 + Math.random() * 4}s;--dl:${Math.random() * 4}s;transform:scale(${.5 + Math.random() * 1.2})`;
+  fStars.appendChild(st);
+}
 function resetFinale(){
   candles.forEach(c => c.classList.remove('out'));
-  $('#s-finale').classList.remove('celebrate');
+  $('#s-finale').classList.remove('celebrate', 'final');
   $('#finaleMsg').classList.remove('show');
-  $('#finaleTitle').innerHTML = 'Close your eyes, <em>make a wish</em>';
   $('#finaleSub').textContent = 'Then tap each candle to blow it out.';
 }
 candles.forEach(c => c.addEventListener('click', () => {
@@ -532,15 +537,19 @@ candles.forEach(c => c.addEventListener('click', () => {
   c.classList.add('out');
   const left = candles.filter(x => !x.classList.contains('out')).length;
   $('#finaleSub').textContent = left ? `${left} more…` : 'Your wish is on its way ✦';
-  if (!left) setTimeout(celebrate, 600);
+  if (!left) setTimeout(celebrate, 700);
 }));
-function celebrate(){
-  $('#s-finale').classList.add('celebrate');
-  $('#finaleTitle').innerHTML = 'Wish made. <em>Now celebrate.</em>';
+async function celebrate(){
+  const sc = $('#s-finale');
+  sc.classList.add('celebrate');                    // wish step fades out
+  confetti(160);
+  await wait(reduce ? 0 : 900);
+  if (cur !== 6) return;
+  sc.classList.add('final');                        // swap in the final card on the night sky
+  document.body.classList.add('night');
+  window.scrollTo(0, 0);
   $('#finaleMsg').classList.add('show');
-  confetti(220);
-  setTimeout(() => confetti(120), 900);
-  setTimeout(() => $('#finaleMsg').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'center' }), 500);
+  setTimeout(() => confetti(200), 500);
 }
 $('#moreConfetti').addEventListener('click', () => confetti(180));
 
