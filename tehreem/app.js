@@ -16,7 +16,6 @@ const MEMORIES = [
   { src:'p13', cap:'My whole world, in one frame.' },
   { src:'p04', cap:'Tall pines, cool air, and your quiet smile.' },
   { src:'p06', cap:'Emerald suits you. Honestly, everything does.' },
-  { src:'p02', cap:'Long tables, loud laughter, and all the people we love.', wide:true },
   { src:'p07', cap:'By the fountain, a wish that already came true.' },
   { src:'p11', cap:'Old red walls, and a timeless kind of grace.' },
   { src:'p08', cap:'A path of little lights. I’d walk every one with you.' },
@@ -331,12 +330,12 @@ $('#ameenBtn').addEventListener('click', e => {
 /* ───────────── 5 · memories ───────────── */
 const strip = $('#strip'), wall = $('#wall');
 MEMORIES.forEach((m, i) => {
-  // filmstrip (portrait shots only, the group photo lives on the wall)
+  // filmstrip (portrait shots only; mark landscape ones with wide:true to keep them on the wall)
   if (!m.wide){
     const f = document.createElement('figure');
     f.className = 'film';
     f.innerHTML = `<button class="film-frame" aria-label="Open photo ${i + 1}: ${m.cap}">
-      <img src="${m.thumb}" data-full="${m.full}" alt="${m.cap}" loading="lazy" decoding="async">
+      <img src="${m.thumb}" data-full="${m.full}" alt="${m.cap}" width="540" height="720" loading="lazy" decoding="async">
       <span class="film-no">${String(i + 1).padStart(2,'0')}</span>
       <figcaption>${m.cap}</figcaption></button>`;
     f.querySelector('button').addEventListener('click', () => { if (!stripDragged) openLightbox(i); });
@@ -346,7 +345,7 @@ MEMORIES.forEach((m, i) => {
   const t = document.createElement('button');
   t.className = 'tile';
   t.style.setProperty('--rot', ((i * 37) % 7 - 3) * .6 + 'deg');
-  t.innerHTML = `<div class="tile-img"><img src="${m.thumb}" alt="${m.cap}" loading="lazy" decoding="async">${m.video ? '<span class="play-badge"></span>' : ''}</div><span>${m.cap}</span>`;
+  t.innerHTML = `<div class="tile-img"><img src="${m.thumb}" alt="${m.cap}" width="540" height="720" loading="lazy" decoding="async" onload="this.classList.add('ok')">${m.video ? '<span class="play-badge"></span>' : ''}</div><span>${m.cap}</span>`;
   t.addEventListener('click', () => openLightbox(i));
   wall.appendChild(t);
 });
