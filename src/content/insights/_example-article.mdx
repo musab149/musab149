@@ -1,0 +1,39 @@
+---
+title: "Article template: how to publish an insight"
+description: "A format reference for writing on this site. Drafts like this one render in development only and are never published."
+date: "2026-01-01"
+category: "Template"
+draft: true
+---
+
+This is a **draft template**, not a published article. Files that start with an underscore, or that set `draft: true` in their frontmatter, only render when you run `npm run dev`. Production builds skip them.
+
+## Frontmatter
+
+Every article starts with a frontmatter block:
+
+```yaml
+title: "Your headline in sentence case"
+description: "One or two sentences for cards, search results and social previews."
+date: "2026-03-14"
+category: "AI products"
+image: "/images/your-cover.jpg"   # optional
+imageAlt: "What the cover shows"  # required if image is set
+draft: false
+```
+
+## Writing style
+
+Keep to the site's voice: first person, short declarative sentences, concrete nouns and active verbs.
+
+- Lead with the point.
+- Use headings (`##` and `###`) — they build the table of contents.
+- Link to sources when you state a fact.
+
+### Quotes
+
+> A pull quote renders in the serif italic with a lime rule.
+
+## Publishing
+
+Remove the underscore from the file name (or set `draft: false`), commit, and push. The article, its Open Graph image, sitemap entry and Article structured data are generated automatically.
