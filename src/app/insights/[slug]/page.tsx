@@ -9,6 +9,7 @@ import { TableOfContents } from "@/components/insights/TableOfContents";
 import { ShareLinks } from "@/components/insights/ShareLinks";
 import { InsightCard } from "@/components/insights/InsightCard";
 import { Chip } from "@/components/ui/Chip";
+import { RiseText } from "@/components/ui/Emphasis";
 import { Button } from "@/components/ui/Button";
 import { ContactCTA } from "@/components/home/ContactCTA";
 import { pageMetadata } from "@/lib/metadata";
@@ -55,8 +56,8 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
               <span>{post.readingMinutes} min read</span>
               {post.draft && <Chip tone="lime">Draft · not published</Chip>}
             </div>
-            <h1 className="hero-fade mt-8 max-w-[22ch] text-[clamp(2.25rem,1.4rem+3.6vw,4.5rem)] font-bold leading-[1.04] tracking-[-0.03em] text-fg" style={{ ["--d" as string]: "0.1s" }}>
-              {post.title}
+            <h1 className="mt-8 max-w-[22ch] text-[clamp(2.25rem,1.4rem+3.6vw,4.5rem)] font-bold leading-[1.04] tracking-[-0.03em] text-fg">
+              <RiseText text={post.title} variant="hero" />
             </h1>
             {post.description && (
               <p className="hero-fade mt-6 max-w-[58ch] text-lg leading-relaxed text-muted xl:text-xl" style={{ ["--d" as string]: "0.25s" }}>

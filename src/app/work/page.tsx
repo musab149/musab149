@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { workSection } from "@/content/home";
 import { allProjects, isWorkPreview } from "@/lib/work";
 import { PageHero } from "@/components/ui/PageHero";
-import { WorkExplorer } from "@/components/work/WorkExplorer";
+import { WorkExplorerLazy as WorkExplorer } from "@/components/work/WorkExplorerLazy";
 import { WorkEmptyState } from "@/components/home/WorkStack";
 import { ContactCTA } from "@/components/home/ContactCTA";
 import { pageMetadata } from "@/lib/metadata";

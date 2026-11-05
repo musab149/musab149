@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { HoverPrefetchLink as Link } from "./HoverPrefetchLink";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn, isExternal } from "@/lib/cn";
 

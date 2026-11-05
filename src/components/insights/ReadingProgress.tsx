@@ -1,7 +1,8 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import { motion, useScroll, useSpring, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
+import { useScroll, useSpring, useReducedMotion } from "motion/react";
 
 /** Thin lime reading-progress bar pinned to the top of the viewport. */
 export function ReadingProgress({ targetId }: { targetId: string }) {
@@ -14,7 +15,7 @@ export function ReadingProgress({ targetId }: { targetId: string }) {
   const { scrollYProgress } = useScroll({ target, offset: ["start 0.15", "end 0.85"] });
   const scaleX = useSpring(scrollYProgress, { stiffness: 220, damping: 40, mass: 0.3 });
   return (
-    <motion.div
+    <m.div
       aria-hidden="true"
       className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left bg-lime"
       style={{ scaleX: reduce ? scrollYProgress : scaleX }}

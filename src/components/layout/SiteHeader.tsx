@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { HoverPrefetchLink as Link } from "@/components/ui/HoverPrefetchLink";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";

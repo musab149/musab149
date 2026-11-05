@@ -14,7 +14,7 @@ export function StatusStrip() {
               {statusStrip.availability}
             </li>
           )}
-          <li className="hidden md:block">{site.location}</li>
+          <li className="hidden lg:block">{site.location}</li>
           <li>
             <LiveClock />
           </li>

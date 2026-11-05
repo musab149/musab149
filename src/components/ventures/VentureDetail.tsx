@@ -8,7 +8,7 @@ import { ParallaxFrame } from "@/components/motion/ParallaxFrame";
 import { Button, ExternalLink } from "@/components/ui/Button";
 import { Chip, StatusBadge } from "@/components/ui/Chip";
 import { Timeline } from "@/components/ui/Timeline";
-import { Wordmark } from "./VentureCard";
+import { RiseText } from "@/components/ui/Emphasis";
 import { pad2 } from "@/lib/cn";
 
 /** Venture detail body (brief §8): mission, overview, problem, approach, role, tech, milestones, screenshots. */
@@ -21,7 +21,7 @@ export function VentureDetail({ venture, related }: { venture: Venture; related:
   return (
     <>
       {/* Hero (dark so the lime wordmark accent keeps its contrast) */}
-      <section data-hero="" aria-labelledby="page-title" className="theme-dark relative isolate overflow-hidden">
+      <section data-hero="" aria-labelledby="page-title" className="theme-dark relative isolate overflow-clip">
         <div className="hero-grid motif-grid absolute inset-0 -z-10" aria-hidden="true" />
         <div className="container-site pb-[clamp(3.5rem,7vw,7rem)] pt-[clamp(2.5rem,5vw,5rem)]">
           <div className="grid-site items-end gap-y-12">
@@ -32,9 +32,8 @@ export function VentureDetail({ venture, related }: { venture: Venture; related:
                 </span>
                 <StatusBadge label={venture.status} />
               </p>
-              <h1 id="page-title" className="hero-fade mt-8 text-display text-fg" style={{ ["--d" as string]: "0.1s" }}>
-                <Wordmark venture={venture} />
-                <span className="sr-only"> — {venture.name}</span>
+              <h1 id="page-title" className="mt-8 text-display text-fg [&_.emph]:text-lime" aria-label={venture.name}>
+                <RiseText text={`${venture.wordmark[0]}*${venture.wordmark[1]}*`} variant="hero" />
               </h1>
               <p className="hero-fade mt-6 text-meta text-muted" style={{ ["--d" as string]: "0.2s" }}>
                 My role: <span className="text-fg">{venture.role}</span>
@@ -51,7 +50,8 @@ export function VentureDetail({ venture, related }: { venture: Venture; related:
                 </Button>
               </div>
             </div>
-            <div className="hero-fade col-span-12 lg:col-span-6" style={{ ["--d" as string]: "0.3s" }}>
+            {/* Static on first paint (largest element → LCP); the inner parallax provides the motion */}
+            <div className="col-span-12 lg:col-span-6">
               <BrowserFrame domain={venture.domain} screenClassName="aspect-[16/11]">
                 <ParallaxFrame>
                   <div className="photo-grade absolute inset-0">
@@ -158,7 +158,7 @@ export function VentureDetail({ venture, related }: { venture: Venture; related:
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
                   <Button href={`/ventures/${r.slug}`} variant="text">
-                    Read more
+                    Read more<span className="sr-only"> about {r.name}</span>
                   </Button>
                   <Button href={r.url} variant="text">
                     {r.domain}

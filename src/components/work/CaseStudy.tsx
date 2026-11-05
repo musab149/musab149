@@ -9,6 +9,7 @@ import { Chip } from "@/components/ui/Chip";
 import { BrowserFrame, PhoneFrame } from "./DeviceFrame";
 import { ProjectVisual } from "./ProjectCard";
 import { pad2 } from "@/lib/cn";
+import { RiseText } from "@/components/ui/Emphasis";
 
 /** Case-study template: Context → Challenge → What we built → AI & tech → Outcome (verified only) → Gallery → Next. */
 export function CaseStudy({ project, next }: { project: Project; next?: Project }) {
@@ -29,8 +30,8 @@ export function CaseStudy({ project, next }: { project: Project; next?: Project 
           <p className="hero-fade text-label text-muted">
             <span className="text-fg">01</span> — Case study · {project.industry}
           </p>
-          <h1 id="page-title" className="hero-fade mt-6 max-w-[18ch] text-display text-fg" style={{ ["--d" as string]: "0.1s" }}>
-            {project.title}
+          <h1 id="page-title" className="mt-6 max-w-[18ch] text-display text-fg">
+            <RiseText text={project.title} variant="hero" />
           </h1>
           <p className="hero-fade mt-8 max-w-[58ch] text-lg leading-relaxed text-muted xl:text-xl" style={{ ["--d" as string]: "0.3s" }}>
             {project.summary}

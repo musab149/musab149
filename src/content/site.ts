@@ -6,6 +6,20 @@
  * Nothing in this file is shown as placeholder text in production.
  */
 
+/**
+ * Canonical base URL, in order of preference:
+ * 1. NEXT_PUBLIC_SITE_URL (set this once ahmedmusab.com is confirmed),
+ * 2. Vercel's production URL (provided automatically on Vercel builds),
+ * 3. the current Vercel deployment URL, 4. localhost for local development.
+ */
+function siteUrl() {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  const vercelProd = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const vercel = process.env.VERCEL_URL;
+  const url = explicit || (vercelProd && `https://${vercelProd}`) || (vercel && `https://${vercel}`) || "http://localhost:3000";
+  return url.replace(/\/$/, "");
+}
+
 export const site = {
   name: "Ahmed Musab",
   shortName: "AM",
@@ -18,11 +32,7 @@ export const site = {
   timeZone: "Asia/Karachi",
   timeZoneLabel: "PKT",
   locale: "en_GB",
-  /**
-   * Canonical base URL. Comes from NEXT_PUBLIC_SITE_URL so the Vercel preview
-   * URL can be used until ahmedmusab.com ownership and DNS are confirmed.
-   */
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
+  url: siteUrl(),
   themeColor: "#17191D",
 } as const;
 

@@ -5,7 +5,7 @@ import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { RegMarks } from "@/components/ui/RegMarks";
-import { WorkExplorer } from "@/components/work/WorkExplorer";
+import { WorkExplorerLazy as WorkExplorer } from "@/components/work/WorkExplorerLazy";
 import { pad2 } from "@/lib/cn";
 
 /** Honest state shown until real case studies are added to src/content/work.ts. */

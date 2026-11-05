@@ -123,7 +123,7 @@ export default function AboutPage() {
               </div>
               <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
                 <Button href={`/ventures/${v.slug}`} variant="text">
-                  Read more
+                  Read more<span className="sr-only"> about {v.name}</span>
                 </Button>
                 <Button href={v.url} variant="text">
                   {v.domain}

@@ -123,7 +123,7 @@ export function DragGallery({ photos, label }: { photos: Photo[]; label: string 
                 alt={p.alt}
                 fill
                 draggable={false}
-                loading={i < 3 ? "eager" : "lazy"}
+                loading="lazy"
                 sizes={`(min-width: 1280px) ${Math.round((460 * p.width) / p.height)}px, (min-width: 768px) ${Math.round((380 * p.width) / p.height)}px, ${Math.round((300 * p.width) / p.height)}px`}
                 className="pointer-events-none object-cover transition-transform duration-[1.2s] ease-[var(--ease-out)] group-hover:scale-[1.03]"
               />

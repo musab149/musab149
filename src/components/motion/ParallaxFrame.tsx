@@ -1,34 +1,15 @@
-"use client";
-
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-
 /**
- * Inner parallax (±distance px) for screenshots inside device frames
- * (ventures signature). The child should be taller than the frame by
- * 2×distance — this component scales it up slightly to guarantee that.
+ * Inner parallax (±40px desktop, ±20px tablet) for screenshots inside device
+ * frames (ventures signature). Implemented with CSS scroll-driven animations
+ * (`animation-timeline: view()`) where supported — zero JavaScript; static in
+ * other browsers and under reduced motion. See `.parallax-inner` in globals.css.
+ * Ancestors must clip with `overflow: clip` (not hidden): `hidden` creates a
+ * scroll container, which would capture the view() timeline.
  */
-export function ParallaxFrame({
-  children,
-  distance = 40,
-  className,
-}: {
-  children: React.ReactNode;
-  distance?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [-distance, distance]);
-
+export function ParallaxFrame({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div ref={ref} className={className} style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-      <motion.div
-        style={reduce ? { inset: 0, position: "absolute" } : { y, position: "absolute", inset: `-${distance}px 0` }}
-      >
-        {children}
-      </motion.div>
+    <div className={className} style={{ position: "absolute", inset: 0, overflow: "clip" }}>
+      <div className="parallax-inner absolute inset-0">{children}</div>
     </div>
   );
 }

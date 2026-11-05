@@ -21,7 +21,7 @@ export function BrowserFrame({
   return (
     <div className={cn("relative", className)}>
       {marks && <RegMarks />}
-      <div className="overflow-hidden rounded-[8px] border border-line-strong bg-card shadow-[0_1px_0_rgb(0_0_0/0.04)]">
+      <div className="overflow-clip rounded-[8px] border border-line-strong bg-card shadow-[0_1px_0_rgb(0_0_0/0.04)]">
         <div className="flex h-9 items-center gap-3 border-b border-line px-3.5" aria-hidden="true">
           <span className="flex gap-1.5">
             <span className="size-2.5 rounded-full bg-fg/15" />
@@ -35,7 +35,7 @@ export function BrowserFrame({
           )}
           <span className="w-[42px]" />
         </div>
-        <div className={cn("relative overflow-hidden", screenClassName)}>{children}</div>
+        <div className={cn("relative overflow-clip", screenClassName)}>{children}</div>
       </div>
     </div>
   );

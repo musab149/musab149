@@ -21,7 +21,7 @@ export function SmoothScroll() {
     const start = async () => {
       const { default: Lenis } = await import("lenis");
       if (cancelled) return;
-      lenis = new Lenis({ lerp: 0.12, wheelMultiplier: 1, anchors: { offset: -72 }, autoRaf: false });
+      lenis = new Lenis({ lerp: 0.12, wheelMultiplier: 1, anchors: { offset: 0 }, autoRaf: false });
       const loop = (time: number) => {
         lenis?.raf(time);
         raf = requestAnimationFrame(loop);

@@ -898,3 +898,89 @@ html.lenis body {
 }
 
 }
+
+/* ── Signature motion implemented in CSS (zero JS) ─────────────────────── */
+@layer components {
+  /* Status strip: rotating role, one step every 3s.
+     Keyframes below are written for 4 roles (+ the first repeated for a seamless loop). */
+  @media (prefers-reduced-motion: no-preference) {
+    .role-rotator {
+      animation: role-flip calc(var(--n) * 3s) var(--ease-out) infinite;
+    }
+  }
+
+  /* Ventures: inner parallax via scroll-driven animation */
+  .parallax-inner {
+    --parallax: 20px;
+  }
+  @media (min-width: 1280px) {
+    .parallax-inner {
+      --parallax: 40px;
+    }
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .parallax-inner {
+        inset: calc(var(--parallax) * -1) 0;
+        animation: parallax-y linear both;
+        animation-timeline: view();
+        animation-range: cover;
+      }
+    }
+  }
+
+  /* Philosophy: words brighten in sequence along the paragraph's view timeline */
+  .hl-word {
+    opacity: 1;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .scroll-highlight {
+        view-timeline-name: --statement;
+      }
+      .scroll-highlight .hl-word {
+        animation: hl-in linear both;
+        animation-timeline: --statement;
+        animation-range: cover calc(12% + var(--a) * 0.45) cover calc(12% + var(--b) * 0.45);
+      }
+    }
+  }
+}
+
+@keyframes role-flip {
+  0%,
+  20% {
+    transform: translateY(0);
+  }
+  25%,
+  45% {
+    transform: translateY(-1.4em);
+  }
+  50%,
+  70% {
+    transform: translateY(-2.8em);
+  }
+  75%,
+  95% {
+    transform: translateY(-4.2em);
+  }
+  100% {
+    transform: translateY(-5.6em);
+  }
+}
+@keyframes parallax-y {
+  from {
+    transform: translate3d(0, calc(var(--parallax) * -1), 0);
+  }
+  to {
+    transform: translate3d(0, var(--parallax), 0);
+  }
+}
+@keyframes hl-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

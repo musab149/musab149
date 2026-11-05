@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import * as m from "motion/react-m";
+import { useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { pad2 } from "@/lib/cn";
 
 type Step = { id: string; label: string; body: string };
@@ -39,7 +40,7 @@ export function PipelineDiagram({ steps }: { steps: readonly Step[] }) {
       <div className="hidden md:block" aria-hidden="true">
         <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full overflow-visible" fill="none">
           <path d={d} stroke="var(--line-strong)" strokeWidth="1" strokeDasharray="3 6" />
-          <motion.path
+          <m.path
             d={d}
             stroke="var(--color-lime)"
             strokeWidth="1.75"
@@ -55,7 +56,7 @@ export function PipelineDiagram({ steps }: { steps: readonly Step[] }) {
       <ol className="relative grid gap-8 md:mt-6 md:grid-cols-5 md:gap-[var(--gutter)]">
         {/* Vertical line (mobile) */}
         <span aria-hidden="true" className="absolute bottom-2 left-[7px] top-2 w-px bg-line md:hidden" />
-        <motion.span
+        <m.span
           aria-hidden="true"
           className="absolute bottom-2 left-[7px] top-2 w-px origin-top bg-lime md:hidden"
           style={{ scaleY: reduce ? 1 : path }}
@@ -80,8 +81,8 @@ function Node({ x, at, progress, reduce }: { x: number; at: number; progress: Mo
   return (
     <g>
       <circle cx={x} cy={Y} r="15" fill="var(--bg)" stroke="var(--line-strong)" />
-      <motion.circle cx={x} cy={Y} r="22" fill="var(--color-lime)" style={{ opacity: reduce ? 0.18 : haloOpacity, scale: reduce ? 1 : halo, transformOrigin: `${x}px ${Y}px` }} />
-      <motion.circle cx={x} cy={Y} r="7" fill="var(--color-lime)" style={{ opacity: reduce ? 1 : on }} />
+      <m.circle cx={x} cy={Y} r="22" fill="var(--color-lime)" style={{ opacity: reduce ? 0.18 : haloOpacity, scale: reduce ? 1 : halo, transformOrigin: `${x}px ${Y}px` }} />
+      <m.circle cx={x} cy={Y} r="7" fill="var(--color-lime)" style={{ opacity: reduce ? 1 : on }} />
     </g>
   );
 }
@@ -90,7 +91,7 @@ function MobileDot({ at, progress, reduce }: { at: number; progress: MotionValue
   const on = useTransform(progress, [Math.max(0, at - 0.06), at], [0, 1]);
   return (
     <span aria-hidden="true" className="absolute left-0 top-1 grid size-[15px] place-items-center rounded-full border border-line-strong bg-surface md:hidden">
-      <motion.span className="size-[7px] rounded-full bg-lime" style={{ opacity: reduce ? 1 : on }} />
+      <m.span className="size-[7px] rounded-full bg-lime" style={{ opacity: reduce ? 1 : on }} />
     </span>
   );
 }

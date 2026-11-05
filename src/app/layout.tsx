@@ -5,6 +5,7 @@ import { site } from "@/content/site";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { RevealObserver } from "@/components/motion/RevealObserver";
 import "./globals.css";
 
 // Self-hosted, subset (latin) variable fonts — no third-party requests.
@@ -98,6 +99,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
         </ViewTransition>
         <SiteFooter />
+        <RevealObserver />
         <SmoothScroll />
       </body>
     </html>

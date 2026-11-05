@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
+import * as m from "motion/react-m";
+import { useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { cn, pad2 } from "@/lib/cn";
 
 type Step = { title: string; body: string };
@@ -26,12 +27,12 @@ export function ProcessLine({ steps }: { steps: readonly Step[] }) {
     <ol ref={ref} className="relative grid gap-10 md:grid-cols-5 md:gap-[var(--gutter)]">
       {/* Track + fill (horizontal on md+, vertical on mobile) */}
       <span aria-hidden="true" className="absolute left-[11px] top-3 bottom-3 w-px bg-line md:left-0 md:right-0 md:top-[11px] md:bottom-auto md:h-px md:w-auto" />
-      <motion.span
+      <m.span
         aria-hidden="true"
         className="absolute left-[11px] top-3 bottom-3 w-px origin-top bg-lime md:hidden"
         style={{ scaleY: reduce ? 1 : fill }}
       />
-      <motion.span
+      <m.span
         aria-hidden="true"
         className="absolute left-0 right-0 top-[11px] hidden h-[2px] origin-left bg-lime md:block"
         style={{ scaleX: reduce ? 1 : fill }}

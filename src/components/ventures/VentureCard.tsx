@@ -131,10 +131,10 @@ export function VentureCard({
         </div>
         <div className="flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
           <Button href={venture.url} variant="secondary" full>
-            Visit site
+            Visit site<span className="sr-only"> of {venture.name}</span>
           </Button>
           <Button href={`/ventures/${venture.slug}`} variant="text">
-            Read more
+            Read more<span className="sr-only"> about {venture.name}</span>
           </Button>
         </div>
       </div>

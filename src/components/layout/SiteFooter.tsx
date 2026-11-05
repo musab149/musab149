@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { HoverPrefetchLink as Link } from "@/components/ui/HoverPrefetchLink";
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { nav, site, links, configuredProfiles } from "@/content/site";
 import { ventures } from "@/content/ventures";
