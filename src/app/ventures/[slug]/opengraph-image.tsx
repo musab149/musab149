@@ -14,6 +14,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const v = getVenture(slug);
   return renderOg({
     eyebrow: v ? `${v.role} · ${v.category}` : "Venture",
-    title: v ? v.name.replace(/(\S+)$/, "*$1*") : "Ventures",
+    title: v ? `${v.name}\n*${v.tagline.replace(/\.$/, "")}*` : "Ventures",
   });
 }

@@ -1,34 +1,55 @@
-import { projects as published, type Project } from "@/content/work";
-import { previewProjects } from "@/content/work.preview";
+import { projects, tagOrder, type Project, type Tag, type WorkImage } from "@/content/work";
 
-/**
- * Design preview: `WORK_PREVIEW=1 npm run dev` fills the work section with
- * clearly-labelled sample cards so the layout and motion can be reviewed
- * before real projects are added. It is ignored in production builds.
- */
-const usePreview =
-  process.env.NODE_ENV !== "production" &&
-  process.env.WORK_PREVIEW === "1" &&
-  published.length === 0;
-
-export const allProjects: Project[] = usePreview ? previewProjects : published;
-export const isWorkPreview = usePreview;
+/** All projects in display order. */
+export const allProjects: Project[] = [...projects].sort((a, b) => a.order - b.order);
 
 export function featuredProjects(limit = 6) {
-  const featured = allProjects.filter((p) => p.featured);
-  return (featured.length ? featured : allProjects).slice(0, limit);
+  return allProjects.filter((p) => p.featured).slice(0, limit);
 }
 
 export function getProject(slug: string) {
   return allProjects.find((p) => p.slug === slug);
 }
 
-export function industries(list: Project[] = allProjects) {
-  return Array.from(new Set(list.map((p) => p.industry))).sort();
-}
-
 export function nextProject(slug: string) {
   const i = allProjects.findIndex((p) => p.slug === slug);
-  if (i === -1 || allProjects.length < 2) return undefined;
+  if (i === -1) return undefined;
   return allProjects[(i + 1) % allProjects.length];
+}
+
+/** Filter tags that actually occur, in the canonical order. */
+export function projectTags(list: Project[] = allProjects): Tag[] {
+  const present = new Set(list.flatMap((p) => p.tags));
+  return tagOrder.filter((t) => present.has(t));
+}
+
+export function heroImage(p: Project): WorkImage {
+  return p.images.find((i) => i.kind === "hero") ?? p.images[0];
+}
+
+/** Light shape passed to client components (keeps the RSC payload small). */
+export type ProjectCardData = {
+  slug: string;
+  name: string;
+  kicker: string;
+  category: string;
+  summary: string;
+  tags: Tag[];
+  tint: string;
+  highlights: { value: string; label: string }[];
+  image: WorkImage;
+};
+
+export function toCard(p: Project): ProjectCardData {
+  return {
+    slug: p.slug,
+    name: p.name,
+    kicker: p.kicker,
+    category: p.category,
+    summary: p.summary,
+    tags: p.tags,
+    tint: p.tint,
+    highlights: p.highlights,
+    image: heroImage(p),
+  };
 }

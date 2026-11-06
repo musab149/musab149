@@ -115,7 +115,7 @@ export function DragGallery({ photos, label }: { photos: Photo[]; label: string 
         {photos.map((p, i) => (
           <figure
             key={p.src}
-            className="group relative shrink-0 overflow-hidden rounded-[4px] bg-card"
+            className="group relative shrink-0 overflow-hidden rounded-[var(--radius-card)] bg-card"
           >
             <div className="photo-grade relative h-[min(64vw,300px)] md:h-[380px] xl:h-[460px]" style={{ aspectRatio: `${p.width} / ${p.height}` }}>
               <Image

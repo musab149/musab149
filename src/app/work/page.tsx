@@ -1,37 +1,53 @@
 import type { Metadata } from "next";
-import { workSection } from "@/content/home";
-import { allProjects, isWorkPreview } from "@/lib/work";
+import { allProjects, projectTags, toCard } from "@/lib/work";
 import { PageHero } from "@/components/ui/PageHero";
-import { WorkExplorerLazy as WorkExplorer } from "@/components/work/WorkExplorerLazy";
-import { WorkEmptyState } from "@/components/home/WorkStack";
-import { ContactCTA } from "@/components/home/ContactCTA";
+import { WorkIndex } from "@/components/work/WorkIndex";
+import { ContactPanel } from "@/components/home/ContactPanel";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Work",
   description:
-    "Selected work from Pixelpk Technologies: products Ahmed Musab and his team have designed, built and shipped for clients.",
+    "Sixteen case studies from Pixelpk Technologies: AI products, mobile apps and business platforms Ahmed Musab's team designed, built and shipped for clients in Pakistan, the Gulf, the UK, the US and Australia.",
   path: "/work",
 });
 
 export default function WorkPage() {
+  const count = (t: string) => allProjects.filter((p) => (p.tags as string[]).includes(t)).length;
+  const ai = count("AI");
+  const figures = [
+    { value: String(allProjects.length), label: "case studies" },
+    { value: String(ai), label: "AI products" },
+    { value: String(count("Mobile")), label: "mobile apps" },
+    { value: String(count("Web")), label: "web platforms" },
+  ];
   return (
     <>
-      <PageHero label="Work" title={workSection.title} intro={workSection.intro} />
-      <section aria-label="Projects" className="theme-light">
-        <div className="container-site">
-          <div className="hairline" aria-hidden="true" />
-          <div className="py-section">
-            {isWorkPreview && (
-              <p className="mb-6 rounded-full border border-dashed border-line-strong px-4 py-2 text-center text-label text-muted">
-                Design preview · sample cards · not shown in production
-              </p>
-            )}
-            {allProjects.length ? <WorkExplorer projects={allProjects} /> : <WorkEmptyState />}
-          </div>
+      <PageHero
+        label="Work"
+        title={"Case\n*studies*."}
+        meta={`${allProjects.length} case studies · ${ai} AI products`}
+        intro="AI products, mobile apps and business platforms the Pixelpk team and I designed, built and shipped, with the problem, the build and the stack behind each one."
+      >
+        <ul className="grid grid-cols-2 border-t border-line lg:grid-cols-4">
+          {figures.map((f, i) => (
+            <li
+              key={f.label}
+              className={["border-b border-line py-5 lg:border-b-0 lg:border-l lg:pl-6", i % 2 === 1 ? "border-l pl-5" : "pr-4", i === 0 ? "lg:border-l-0 lg:pl-0" : ""].join(" ")}
+            >
+              <p className="figure-xl text-ink">{f.value}</p>
+              <p className="mt-2 text-[0.9375rem] text-mist">{f.label}</p>
+            </li>
+          ))}
+        </ul>
+      </PageHero>
+      <section aria-label="All case studies" className="theme-light">
+        <div className="container-site pb-[var(--section-pad)]">
+          <h2 className="sr-only">All case studies</h2>
+          <WorkIndex projects={allProjects.map(toCard)} tags={projectTags()} />
         </div>
       </section>
-      <ContactCTA />
+      <ContactPanel />
     </>
   );
 }

@@ -1,9 +1,8 @@
 /**
- * site.ts — the single place for links, contact details and feature flags.
+ * site.ts — the single place for identity, links, navigation and flags.
  *
- * RULE: anything that is empty ("") or `confirmed: false` is never rendered.
- * Fill a value in and the matching button, link or block appears automatically.
- * Nothing in this file is shown as placeholder text in production.
+ * RULE: anything empty ("") or `confirmed: false` is never rendered.
+ * Fill a value in and the matching button, link or block appears.
  */
 
 /**
@@ -23,29 +22,29 @@ function siteUrl() {
 export const site = {
   name: "Ahmed Musab",
   shortName: "AM",
-  /** Used in titles, JSON-LD and the footer. */
+  /**
+   * Title as supplied in the brief. Note: pixelpk.com/team lists Ahmed as
+   * "Founder · Director, Marketing" — see CONTENT-TO-CONFIRM.md.
+   */
   jobTitle: "Founder & CEO, Pixelpk Technologies",
   role: "Founder & AI specialist",
   description:
-    "Ahmed Musab is the founder and CEO of Pixelpk Technologies and the lead behind Pakistan Law Bot. He designs and ships AI agents, LLM-powered products and the software around them.",
+    "Ahmed Musab is a founder of Pixelpk Technologies and the lead behind Pakistan LawBot. He builds AI agents, LLM-powered products and the software businesses around them, from Lahore, Pakistan.",
   location: "Lahore, Pakistan",
   timeZone: "Asia/Karachi",
   timeZoneLabel: "PKT",
   locale: "en_GB",
   url: siteUrl(),
-  themeColor: "#17191D",
+  themeColor: "#0D0C1D",
 } as const;
 
-/**
- * Contact and profile links (Section 3.3 of the brief).
- * Leave a value empty to hide every button/link that uses it.
- */
+/** Contact and profile links. Leave a value empty to hide everything that uses it. */
 export const links = {
   linkedin: "", // e.g. "https://www.linkedin.com/in/…"
   email: "", // e.g. "hello@ahmedmusab.com"
-  booking: "", // e.g. "https://cal.com/…" or Calendly
-  github: "", // personal GitHub profile URL
-  x: "", // e.g. "https://x.com/…"
+  booking: "", // e.g. "https://cal.com/…"
+  github: "",
+  x: "",
   youtube: "",
 } as const;
 
@@ -69,33 +68,48 @@ export function configuredProfiles() {
 }
 
 export const flags = {
-  /** Show the "Get notified" newsletter capture. Requires a provider; none is wired yet. */
   newsletter: false,
-  /** Add Aivastark as a third venture (needs description + URL in ventures.ts). */
+  /** Show the Aivastark case study as a venture (needs Ahmed's role confirmed). */
   aivastark: false,
-  /** Status strip availability badge on the homepage. */
   availability: true,
+  /** Show the Pixelpk figures published on pixelpk.com (stats row, venture card). */
+  pixelpkFigures: true,
+  /** Show the client testimonials published on pixelpk.com. */
+  testimonials: true,
 } as const;
 
-/** Primary navigation (header + mobile menu + footer "Explore"). */
+/** Primary navigation — numbered, like the section indices. */
 export const nav = [
-  { label: "About", href: "/about" },
-  { label: "Ventures", href: "/ventures" },
   { label: "Work", href: "/work" },
-  { label: "AI", href: "/ai" },
-  { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
+  { label: "Ventures", href: "/ventures" },
+  { label: "Services", href: "/#services" },
+  { label: "AI lab", href: "/ai" },
+  { label: "About", href: "/about" },
 ] as const;
 
-/** Status strip under the header (homepage only). */
+/** Status line in the hero. */
 export const statusStrip = {
   availability: "Open to AI builds & partnerships",
-  roles: ["Founder", "AI specialist", "Product builder", "Team lead"],
+  place: "Lahore · Remote",
+  role: "Founder · Pixelpk",
 } as const;
 
 /**
- * Public proof points (Section 3.2). Each stays hidden until Ahmed confirms it
- * by setting `confirmed: true`. Every one links to its public source.
+ * Figures Pixelpk publishes about itself on pixelpk.com (home & case-study pages).
+ * Shown with a source note; switch off with flags.pixelpkFigures.
+ */
+export const pixelpkFigures = [
+  { value: "50", suffix: "+", label: "people on the Pixelpk team" },
+  { value: "1,000", suffix: "+", label: "projects shipped by the team" },
+  { value: "5", suffix: "+", label: "countries served" },
+  { value: "16", suffix: "", label: "published case studies" },
+] as const;
+
+export const pixelpkSource = "https://pixelpk.com/";
+
+/**
+ * Public proof points. Each stays hidden until Ahmed confirms it
+ * (`confirmed: true`). Every one links to its public source.
  */
 export type ProofPoint = {
   id: string;
@@ -103,54 +117,36 @@ export type ProofPoint = {
   short: string;
   source: string;
   sourceLabel: string;
-  venture: "pixelpk-technologies" | "pakistan-law-bot";
+  venture: "pixelpk-technologies" | "pakistan-lawbot";
   confirmed: boolean;
 };
 
 export const proofPoints: ProofPoint[] = [
   {
     id: "clutch",
-    label: "Pixelpk rated 4.9/5 on Clutch from 7 verified reviews",
+    label: "Pixelpk rated 4.9/5 on Clutch",
     short: "4.9/5 on Clutch",
     source: "https://clutch.co/go-to-review/pixelpk-technologies/7292",
     sourceLabel: "Clutch",
     venture: "pixelpk-technologies",
-    confirmed: false,
-  },
-  {
-    id: "manifest-founded",
-    label: "Pixelpk founded in 2018 (per The Manifest)",
-    short: "Founded 2018",
-    source: "https://themanifest.com/company/pixelpk-technologies",
-    sourceLabel: "The Manifest",
-    venture: "pixelpk-technologies",
-    confirmed: false,
+    confirmed: true, // stated on pixelpk.com ("Rated 4.9/5 on Clutch")
   },
   {
     id: "stanford-codex",
-    label: "Pakistan Law Bot is listed on the Stanford CodeX TechIndex",
+    label: "Pakistan LawBot is listed on the Stanford CodeX TechIndex",
     short: "Listed on Stanford CodeX TechIndex",
     source: "https://techindex.law.stanford.edu/companies/pakistan-law-bot",
     sourceLabel: "Stanford CodeX",
-    venture: "pakistan-law-bot",
+    venture: "pakistan-lawbot",
     confirmed: false,
   },
   {
     id: "product-hunt",
-    label: "Pakistan Law Bot launched on Product Hunt, including its MCP server for Claude",
+    label: "Pakistan LawBot launched on Product Hunt, including its MCP server",
     short: "Launched on Product Hunt",
     source: "https://www.producthunt.com/products/pakistan-law-bot",
     sourceLabel: "Product Hunt",
-    venture: "pakistan-law-bot",
-    confirmed: false,
-  },
-  {
-    id: "github-org",
-    label: "Pixelpk on GitHub",
-    short: "Pixelpk on GitHub",
-    source: "https://github.com/Pixelpk",
-    sourceLabel: "GitHub",
-    venture: "pixelpk-technologies",
+    venture: "pakistan-lawbot",
     confirmed: false,
   },
 ];

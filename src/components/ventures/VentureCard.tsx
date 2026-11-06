@@ -1,143 +1,165 @@
+import { Fragment } from "react";
 import Image from "next/image";
 import type { Venture } from "@/content/ventures";
-import { confirmedProofPoints } from "@/content/site";
-import { BrowserFrame } from "@/components/work/DeviceFrame";
-import { ParallaxFrame } from "@/components/motion/ParallaxFrame";
-import { CursorPill } from "@/components/motion/CursorPill";
-import { Reveal } from "@/components/motion/Reveal";
+import { confirmedProofPoints, flags } from "@/content/site";
+import { BrowserFrame, PhoneFrame } from "@/components/work/DeviceFrame";
 import { Button, ExternalLink } from "@/components/ui/Button";
 import { Chip, StatusBadge } from "@/components/ui/Chip";
-import { cn, pad2 } from "@/lib/cn";
-
-/** Typographic wordmark — used until an official logo file is supplied. */
-export function Wordmark({ venture, className }: { venture: Venture; className?: string }) {
-  if (venture.logo) {
-    return (
-      <Image
-        src={venture.logo.src}
-        width={venture.logo.width}
-        height={venture.logo.height}
-        alt={`${venture.name} logo`}
-        className={cn("h-8 w-auto", className)}
-      />
-    );
-  }
-  const [main, accent] = venture.wordmark;
-  return (
-    <span className={cn("inline font-bold tracking-[-0.035em]", className)}>
-      <span>{main}</span>
-      <span className="emph !text-[1.12em] !leading-none text-lime">{accent}</span>
-    </span>
-  );
-}
+import { pad2, cn } from "@/lib/cn";
 
 /**
- * Large venture card: device frame with inner parallax on one side, details on
- * the other. `flip` alternates the image side for rhythm.
+ * Large venture card in the reference's product-card format: logo, index and
+ * role, the name at display size, a serif tagline, description, figures, links,
+ * and real screenshots in a browser frame with a phone overlapping it.
  */
 export function VentureCard({
   venture,
   index,
-  flip = false,
+  total,
   headingLevel = "h3",
+  className,
+  style,
+  recede,
 }: {
   venture: Venture;
   index: number;
-  flip?: boolean;
+  total: number;
   headingLevel?: "h2" | "h3";
+  className?: string;
+  style?: React.CSSProperties;
+  recede?: boolean;
 }) {
   const H = headingLevel;
-  const image = venture.screenshots[0] ?? venture.photo;
   const proofs = confirmedProofPoints(venture.slug);
+  const showFigures = venture.slug !== "pixelpk-technologies" || flags.pixelpkFigures;
+  const detailHref = venture.caseStudy ? `/work/${venture.caseStudy}` : `/ventures/${venture.slug}`;
 
   return (
-    <Reveal
-      as="article"
+    <article
       aria-labelledby={`venture-${venture.slug}`}
-      className="grid-site items-stretch gap-y-10 rounded-[var(--radius-card)] border border-line bg-card p-5 sm:p-7 xl:p-10"
+      data-recede={recede ? "" : undefined}
+      style={style}
+      className={cn(
+        "stack-card theme-light relative isolate overflow-clip rounded-[24px] border border-ink/10 bg-paper-2 text-ink",
+        className,
+      )}
     >
-      {/* Visual */}
+      {/* Brand-tint glow */}
       <div
-        data-ri=""
-        className={cn("col-span-12 lg:col-span-7", flip && "lg:order-2 lg:col-start-6")}
-      >
-        <a
-          href={venture.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative block"
-          aria-label={`Visit ${venture.name} (opens in a new tab)`}
-        >
-          <BrowserFrame domain={venture.domain} screenClassName="aspect-[16/11]">
-            <ParallaxFrame>
-              <div className="photo-grade absolute inset-0">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  sizes="(min-width: 1280px) 680px, (min-width: 1024px) 55vw, 92vw"
-                  className="object-cover transition-transform duration-[1.2s] ease-[var(--ease-out)] group-hover:scale-[1.03]"
-                />
-              </div>
-            </ParallaxFrame>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-ink/85 via-ink/30 to-transparent p-5 pt-16">
-              <Wordmark venture={venture} className="text-[clamp(1.5rem,1.1rem+1.6vw,2.5rem)] text-paper" />
-              {"caption" in image && image.caption && (
-                <span className="hidden text-label text-paper/80 sm:block">{image.caption}</span>
-              )}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.16]"
+        style={{ background: `radial-gradient(70% 80% at 100% 0%, ${venture.tint}, transparent 70%)` }}
+      />
+      <div className="grid-site gap-y-10 p-5 sm:p-8 xl:p-12">
+        {/* Copy */}
+        <div className="col-span-12 flex flex-col justify-between gap-10 lg:col-span-5">
+          <div>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <Image
+                src={venture.logo.src}
+                alt={`${venture.name} logo`}
+                width={venture.logo.width}
+                height={venture.logo.height}
+                sizes="200px" className="h-7 w-auto"
+              />
+              <span className="chip">{venture.role}</span>
             </div>
-          </BrowserFrame>
-          <CursorPill />
-        </a>
-      </div>
+            <p className="mt-8 text-label text-mist">
+              <span className="text-accent-deep">
+                {pad2(index + 1)} / {pad2(total)}
+              </span>{" "}
+              · {venture.category}
+            </p>
+            <H id={`venture-${venture.slug}`} className="display-md mt-3">
+              {venture.name}
+            </H>
+            <p className="emph mt-3 block !text-[1.75rem] !leading-tight">{venture.tagline}</p>
+            <p className="mt-5 max-w-[50ch] text-[1rem] leading-relaxed text-mist">{venture.description}</p>
 
-      {/* Details */}
-      <div
-        data-ri=""
-        style={{ ["--i" as string]: 1 }}
-        className={cn(
-          "col-span-12 flex flex-col justify-between gap-10 lg:col-span-5",
-          flip && "lg:order-1 lg:col-start-1",
-        )}
-      >
-        <div>
-          <div className="flex items-center justify-between gap-4 text-label text-muted">
-            <span>
-              <span className="text-fg">V/{pad2(index + 1)}</span> · {venture.category}
-            </span>
+            {showFigures && (
+              <dl className="mt-8 grid grid-cols-2 border-t border-line">
+                {venture.figures.map((f, i) => (
+                  <div key={f.label} className={cn("border-b border-line py-4", i % 2 === 1 ? "border-l pl-5" : "pr-4")}>
+                    <dt className="sr-only">{f.label}</dt>
+                    <dd>
+                      <span className="figure-md block text-ink">{f.value}</span>
+                      <span className="mt-1 block text-[0.8125rem] leading-snug text-mist">{f.label}</span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {proofs.length > 0 && (
+              <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-label text-mist">
+                {proofs.map((p) => (
+                  <li key={p.id}>
+                    <ExternalLink href={p.source}>{p.short}</ExternalLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <Button href={detailHref} variant="ink">
+              {venture.caseStudy ? "Case study" : "About the venture"}
+              <span className="sr-only"> · {venture.name}</span>
+            </Button>
+            <Button href={venture.url} variant="text">
+              {venture.domain}
+            </Button>
             <StatusBadge label={venture.status} />
           </div>
-          <H id={`venture-${venture.slug}`} className="mt-8 text-[clamp(1.75rem,1.3rem+1.8vw,2.75rem)] font-bold leading-[1.05] tracking-[-0.03em] text-fg">
-            {venture.name}
-          </H>
-          <p className="mt-2 text-meta text-muted">{venture.role}</p>
-          <p className="mt-6 text-[1.1875rem] leading-relaxed text-fg">{venture.tagline}</p>
-          <ul className="mt-7 flex flex-wrap gap-2" aria-label={`${venture.name} capabilities`}>
+        </div>
+
+        {/* Visual */}
+        <div className="relative col-span-12 lg:col-span-7 lg:pl-4">
+          <a href={venture.url} target="_blank" rel="noopener noreferrer" className="group block" aria-label={`Visit ${venture.domain} (opens in a new tab)`}>
+            <BrowserFrame domain={venture.domain} className="mr-[14%]">
+              <div className="media-zoom absolute inset-0">
+                <Image src={venture.desktop.src} alt={venture.desktop.alt} fill sizes="(min-width: 1280px) 620px, (min-width: 1024px) 50vw, 86vw" className="object-cover object-top" />
+              </div>
+            </BrowserFrame>
+            <PhoneFrame className="absolute bottom-[-6%] right-0 w-[30%] min-w-[110px] max-w-[190px] lg:bottom-[-4%]">
+              <Image src={venture.mobile.src} alt={venture.mobile.alt} fill sizes="190px" className="object-cover object-top" />
+            </PhoneFrame>
+          </a>
+          <ul className="mt-14 flex flex-wrap gap-2 lg:mt-16" aria-label={`${venture.name} capabilities`}>
             {venture.capabilities.map((c) => (
               <li key={c}>
-                <Chip>{c}</Chip>
+                <Chip solid>{c}</Chip>
               </li>
             ))}
           </ul>
-          {proofs.length > 0 && (
-            <ul className="mt-6 flex flex-col gap-1">
-              {proofs.map((p) => (
-                <li key={p.id} className="text-meta text-muted">
-                  <ExternalLink href={p.source}>{p.short}</ExternalLink>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <div className="flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <Button href={venture.url} variant="secondary" full>
-            Visit site<span className="sr-only"> of {venture.name}</span>
-          </Button>
-          <Button href={`/ventures/${venture.slug}`} variant="text">
-            Read more<span className="sr-only"> about {venture.name}</span>
-          </Button>
         </div>
       </div>
-    </Reveal>
+    </article>
+  );
+}
+
+/**
+ * Sticky stack: each card pins under the header and the next slides over it.
+ * The card underneath recedes via a scroll-driven animation bound to a marker
+ * placed just before the next card (timeline-scope shares the names).
+ */
+export function VentureStack({ ventures, headingLevel = "h3" }: { ventures: Venture[]; headingLevel?: "h2" | "h3" }) {
+  const names = ventures.map((_, i) => `--vstack-${i}`);
+  return (
+    <div className="flex flex-col gap-6 lg:gap-10" style={{ ["timelineScope" as string]: names.join(", ") }}>
+      {ventures.map((v, i) => (
+        <Fragment key={v.slug}>
+          {i > 0 && <div aria-hidden="true" className="-my-3 h-px lg:-my-5" style={{ ["viewTimelineName" as string]: names[i] }} />}
+          <VentureCard
+            venture={v}
+            index={i}
+            total={ventures.length}
+            headingLevel={headingLevel}
+            recede={i < ventures.length - 1}
+            className="lg:sticky lg:top-[96px]"
+            style={i < ventures.length - 1 ? ({ ["animationTimeline" as string]: names[i + 1] } as React.CSSProperties) : undefined}
+          />
+        </Fragment>
+      ))}
+    </div>
   );
 }

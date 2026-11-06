@@ -1,30 +1,40 @@
 import { Fragment } from "react";
 
 /**
- * Renders copy where *one phrase* is wrapped in asterisks as the Instrument
- * Serif italic emphasis. Content files stay plain strings.
+ * Copy helpers. In content strings:
+ *   *word*  → the serif-italic accent
+ *   \n      → a deliberate line break
  */
+
 export function Emphasis({ text }: { text: string }) {
-  const parts = text.split(/(\*[^*]+\*)/g).filter(Boolean);
+  const lines = text.split("\n");
   return (
     <>
-      {parts.map((part, i) =>
-        part.startsWith("*") && part.endsWith("*") ? (
-          <em key={i} className="emph">
-            {part.slice(1, -1)}
-          </em>
-        ) : (
-          <Fragment key={i}>{part}</Fragment>
-        ),
-      )}
+      {lines.map((line, li) => (
+        <Fragment key={li}>
+          {li > 0 && <br />}
+          {line
+            .split(/(\*[^*]+\*)/g)
+            .filter(Boolean)
+            .map((part, i) =>
+              part.startsWith("*") && part.endsWith("*") ? (
+                <em key={i} className="emph">
+                  {part.slice(1, -1)}
+                </em>
+              ) : (
+                <Fragment key={i}>{part}</Fragment>
+              ),
+            )}
+        </Fragment>
+      ))}
     </>
   );
 }
 
 type Word = { word: string; emph: boolean };
 
-/** Split into clusters of words that had no whitespace between them (e.g. "building" + "."). */
-function clusters(text: string): Word[][] {
+/** Clusters of words with no whitespace between them stay together ("work" + "."). */
+function clusters(line: string): Word[][] {
   const out: Word[][] = [[]];
   const re = /\*([^*]+)\*|(\s+)|([^\s*]+)/g;
   let m: RegExpExecArray | null;
@@ -32,7 +42,7 @@ function clusters(text: string): Word[][] {
   const space = () => {
     if (out[out.length - 1].length) out.push([]);
   };
-  while ((m = re.exec(text))) {
+  while ((m = re.exec(line))) {
     if (m[1] !== undefined) {
       m[1].split(/(\s+)/).forEach((part) => {
         if (!part) return;
@@ -47,10 +57,8 @@ function clusters(text: string): Word[][] {
 
 /**
  * Heading text split into masked words so each line can rise from its
- * baseline. `variant="hero"` uses the CSS-only load animation (no JS wait);
- * the default variant is driven by the shared <Reveal lines> observer.
- * Punctuation stays glued to its word; `underline` draws a lime rule under
- * each emphasised word (hero only).
+ * baseline. `variant="hero"` uses the CSS load animation (never waits for JS);
+ * the default variant is driven by the shared reveal observer.
  */
 export function RiseText({
   text,
@@ -61,7 +69,6 @@ export function RiseText({
   variant?: "reveal" | "hero";
   underline?: boolean;
 }) {
-  const groups = clusters(text);
   const cls = variant === "hero" ? "rise-word hero-word" : "rise-word";
   let n = 0;
 
@@ -71,10 +78,7 @@ export function RiseText({
       <span className={w.emph && underline ? `${cls} relative` : cls} style={{ ["--w" as string]: i }}>
         <span>{w.word}</span>
         {w.emph && underline && (
-          <span
-            aria-hidden="true"
-            className="hero-underline absolute bottom-[0.02em] left-0 right-0 h-[0.06em] min-h-[3px] bg-lime"
-          />
+          <span aria-hidden="true" className="hero-underline absolute bottom-[0.06em] left-0 right-0 h-[0.06em] min-h-[2px] bg-accent" />
         )}
       </span>
     );
@@ -89,16 +93,24 @@ export function RiseText({
 
   return (
     <>
-      {groups.map((group, gi) => (
-        <Fragment key={gi}>
-          {group.length === 1 ? (
-            renderWord(group[0], 0)
-          ) : (
-            <span className="whitespace-nowrap">{group.map((w, wi) => renderWord(w, wi))}</span>
-          )}
-          {gi < groups.length - 1 ? " " : null}
-        </Fragment>
-      ))}
+      {text.split("\n").map((line, li) => {
+        const groups = clusters(line);
+        return (
+          <Fragment key={li}>
+            {li > 0 && <br />}
+            {groups.map((group, gi) => (
+              <Fragment key={gi}>
+                {group.length === 1 ? (
+                  renderWord(group[0], 0)
+                ) : (
+                  <span className="whitespace-nowrap">{group.map((w, wi) => renderWord(w, wi))}</span>
+                )}
+                {gi < groups.length - 1 ? " " : null}
+              </Fragment>
+            ))}
+          </Fragment>
+        );
+      })}
     </>
   );
 }

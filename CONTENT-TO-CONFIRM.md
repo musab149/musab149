@@ -1,111 +1,89 @@
 # Content to confirm
 
-Everything Ahmed needs to **supply**, **confirm** or **review** before launch. Each item names the file where the value lives.
+What Ahmed needs to **decide**, **supply** or **check** before launch. Each item names the file where the value lives.
 
-Legend: 🔴 blocks a feature (hidden until supplied) · 🟡 drafted copy to review · 🟢 nice to have
+Legend: 🔴 decide or supply before launch · 🟡 check imported or drafted copy · 🟢 nice to have
 
 ---
 
-## 1. Links and contact details · `src/content/site.ts`
+## 1. 🔴 Titles and founder claims: please decide
 
-| | Item | Field | Effect when filled |
-|---|---|---|---|
-| 🔴 | LinkedIn profile URL | `links.linkedin` | "Connect on LinkedIn" button, footer, contact page, JSON-LD `sameAs` |
-| 🔴 | Contact email | `links.email` | Footer, contact page, privacy page, form fallback ("Please email me directly at…") |
-| 🔴 | Booking link (Calendly or similar) | `links.booking` | "Book a call" button in the contact CTA and on the contact page |
-| 🟢 | GitHub, X, YouTube | `links.github`, `links.x`, `links.youtube` | Footer "Elsewhere", contact page, `sameAs` |
+Three public sources describe the same companies differently:
 
-## 2. Facts to confirm
-
-| | Item | Where | Current state |
-|---|---|---|---|
-| 🔴 | **Exact role at Pakistan Law Bot** (Founder / Co-founder / Product Lead / …) | `src/content/ventures.ts` → `role` | Shows **"Lead"**, from the confirmed fact that Ahmed leads it |
-| 🔴 | **Career milestones with dates** for the About timeline | `src/content/timeline.ts` → `timeline` | Empty, so the timeline is hidden |
-| 🔴 | **Aivastark**: include as a third venture? Needs description, URL and role | `src/content/site.ts` → `flags.aivastark`, plus `src/content/ventures.ts` | Hidden |
-| 🔴 | **Toolbox**: confirm n8n, MCP and Flutter, and add any others | `src/content/ai.ts` → `toolbox` | Shows n8n, MCP, Flutter |
-| 🟢 | Testimonials (real, with permission and attribution) | none yet | No testimonials component is shown |
-| 🟢 | Newsletter provider (optional) | `flags.newsletter` | Off |
-
-### Public proof points: set `confirmed: true` to show each one · `src/content/site.ts` → `proofPoints`
-
-| Proof point | Source |
+| Source | What it says |
 |---|---|
-| Pixelpk rated 4.9/5 on Clutch from 7 verified reviews | https://clutch.co/go-to-review/pixelpk-technologies/7292 |
-| Pixelpk founded in 2018 (per The Manifest) | https://themanifest.com/company/pixelpk-technologies |
-| Pakistan Law Bot listed on Stanford CodeX TechIndex | https://techindex.law.stanford.edu/companies/pakistan-law-bot |
-| Pakistan Law Bot launched on Product Hunt, including its MCP server for Claude | https://www.producthunt.com/products/pakistan-law-bot |
-| Pixelpk GitHub organisation | https://github.com/Pixelpk |
+| **The brief** (used on this site) | Ahmed Musab: "Founder & CEO, Pixelpk Technologies"; "leads" Pakistan LawBot |
+| **pixelpk.com/team** | "Two founders": **Syed Anas Waqar**, Founder · Director, Development; **Ahmed Musab**, Founder · Director, Marketing ("leads marketing and growth") |
+| **anasw.com** (Syed Anas's site) | Syed Anas "founded Pixelpk Technologies" (2018), "Pixelpk acquired by Innostark, 2023", and is "Founder & Product Owner" of Pakistan LawBot |
 
-Confirmed proof points appear on the venture cards and on the venture detail pages under "Milestones", each linking to its source.
+On this site:
+- The **title** reads "Founder & CEO, Pixelpk Technologies" (`site.jobTitle` in `src/content/site.ts`, as supplied in the brief).
+- The **prose** says "one of the founders of Pixelpk", which is consistent with all three sources.
+- The Pixelpk venture card shows the role "**Founder**". The Pakistan LawBot card shows "**Lead**" (`role` in `src/content/ventures.ts`).
+- The **Founder** role card uses Pixelpk's own description of Ahmed's job: strategy, brand, marketing and growth.
 
-## 3. Assets still needed
+**Please confirm** the exact title you want, for example "Co-founder & CEO" or "Founder · Director, Marketing", and your title at Pakistan LawBot. Visitors may well compare this site with pixelpk.com and anasw.com.
 
-| | Asset | Where it goes | Notes |
-|---|---|---|---|
-| 🔴 | **Pixelpk portfolio / case studies** | `src/content/work.ts` (+ images in `public/images/work/<slug>/`) | pixelpk.com was unreachable from the build environment, so nothing was extracted. For each project: `slug, title, clientLabel, industry, platforms[], summary, challenge, whatWeBuilt, aiOrTech[], outcome?, images[], liveUrl?, year?, featured`. Mark the six strongest as `featured: true`. |
-| 🔴 | **Permission to name each client** | `clientLabel` / `clientNamePending` per project | Until confirmed, use an anonymised label such as "UK fintech start-up" |
-| 🔴 | **Official logos** (SVG or high-res PNG) for Pixelpk and Pakistan Law Bot | `public/logos/` + `logo` field in `ventures.ts` | Typographic wordmarks are used until then |
-| 🔴 | **Real product screenshots** of pixelpk.com and pakistanlawbot.com (web + app) | `screenshots[]` in `ventures.ts` | The device frames currently show real event photos |
-| 🟢 | Pakistan Law Bot screen recording (muted loop + poster) | `terminalVideo` in `src/content/ai.ts` | Would replace the "Illustrative demo" terminal |
-| 🟢 | Domain: confirm ownership/DNS of ahmedmusab.com | Vercel + `NEXT_PUBLIC_SITE_URL` | Canonical URLs use the Vercel URL until this is set |
+Not used anywhere: the Innostark acquisition, and anasw.com's LawBot user and revenue figures (14K users, 500+ paying). Tell me if any of these should appear.
 
-## 4. Photos: confirm identification and consent · `src/content/culture.ts`
+## 2. 🔴 Links · `src/content/site.ts`
 
-All 18 photos from the Drive folder are used. Please confirm:
+| Item | Field | Appears in |
+|---|---|---|
+| LinkedIn | `links.linkedin` | Contact panel, footer, contact page, JSON-LD |
+| Email | `links.email` | Footer, contact page, form fallback message |
+| Booking link | `links.booking` | Contact panel and contact page |
+| GitHub, X, YouTube | `links.github`, `links.x`, `links.youtube` | Footer "Elsewhere", contact page |
 
-- **Consent:** the team members who appear in group photos are happy for them to be published.
-- **Identification:** Ahmed is named in the alt text of these photos. I identified him from the confirmed portrait and headshot, so please check each one:
-  - `culture-annual-lunch-stage.jpg`: speaking on stage at the annual lunch
-  - `culture-annual-lunch-recognition.jpg`: presenting a plaque with a colleague
-  - `event-pakistan-law-bot.jpg`: centre, at the Pakistan Law Bot event
-  - `event-welcoming-guest.jpg`: handing a bouquet to a guest
-  - `culture-mountain-break.jpg`: seated in front of the snow-covered mountain
-  - `pixelpk-team-colours.jpg`: left, in a maroon Pixelpk polo
-- **Not identified:** `pixelpk-mountains.jpg` shows a person from behind. The caption says only "Pixelpk, out in the mountains".
-- **Captions to review:** "Team trip to Kashmir" (taken from the file names), "Team trip to Fairy Meadows" (text printed on the photo), "Team trip" (×2, place unknown), "On the trail with the team", "Games & sports", "Annual team lunch", "Team lunch", "Team recognition at the annual lunch", "On stage at the annual lunch", "At a Pakistan Law Bot event", "Welcoming a guest at an event", "A pause in the mountains", "In Pixelpk colours".
+All of these are empty, so the buttons are hidden.
 
-## 5. Drafted copy to review (🟡)
+## 3. 🟡 Imported from pixelpk.com: please check
 
-Copy the brief supplied verbatim is not listed. Everything below was drafted to fill gaps, and every line is editable in the file shown.
+| What | Where | Notes |
+|---|---|---|
+| **16 case studies**: text, figures and images | `src/content/work.ts`, `public/images/work/` | Imported as Pixelpk publishes them, including client names (AITube Inc., KIXX, Riphah, Ummah College and others) and figures such as "10K+ Google Play downloads" (AITube). Each page links to the pixelpk.com original, which is also its canonical URL. Confirm you're happy to republish them, and that every client is fine being named. |
+| **Pixelpk figures**: 50+ team, 1,000+ projects, 5+ countries, 16 case studies | `pixelpkFigures` in `site.ts`; Pixelpk venture card | Shown with a note: "as published on pixelpk.com". Turn off with `flags.pixelpkFigures`. |
+| **Pakistan LawBot figures**: 600+ API endpoints, 26 practice areas, 13 AI-drafted document types, 20 MCP tools | `ventures.ts` | From Pixelpk's LawBot case study. |
+| **Four client testimonials** (Phares Abed, Alae Amraoui, Mark Javed, Abdullah Mudassir) | `src/content/testimonials.ts` | Labelled "Pixelpk client", with a source link. Wording is unchanged; spaces before punctuation and one all-caps phrase were normalised. Confirm permission to show them on your personal site. Turn off with `flags.testimonials`. |
+| **"Rated 4.9/5 on Clutch"** | `proofPoints` in `site.ts` (`confirmed: true`) | Stated on pixelpk.com. Links to Clutch. |
+| **The nine services and three engagement models** | `src/content/services.ts` | Pixelpk's wording. Each links to the matching pixelpk.com page. |
+| **Toolbox** | `src/content/ai.ts` | Pixelpk's published tech stack, plus n8n and MCP from the brief, plus Anthropic and React Native (used in the case studies). |
+| **Aivastark** | Shown as a Pixelpk case study only | To show it as one of *your* ventures, confirm your role and set `flags.aivastark`. |
 
-### Homepage · `src/content/home.ts`
-- **Hero headline:** "I build *AI products* and the companies that ship them." (from the brief). Alternatives:
-  - "Building *intelligent* software that moves businesses forward."
-  - "Founder. Engineer. *AI builder.*"
-- **"Now" line:** "Now: building Pakistan Law Bot and AI agents at Pixelpk." (marked "confirm" in the brief)
-- **Status strip availability:** "Open to AI builds & partnerships"
-- **Role card detail lines (shown on hover):** "Company direction, partnerships and the long game." · "Grounded answers, measured honestly, people in the loop." · "Scope, ship, learn, repeat." · "Clear priorities and short feedback loops."
-- **About facts list:** Based in / Background / Building
-- **Expertise intro:** "What my teams and I bring to a product, from the first sketch to the release after next."
-- **Expertise one-liners** (`src/content/expertise.ts`): "Software that is built to last past launch day." · "AI that retrieves, reasons and acts inside real workflows." · "Deciding what to build first, and what not to build." · "Teams and processes that keep shipping."
-- **Process step explanations** (five one-sentence descriptions)
-- **Work empty state:** "Case studies are being prepared for this site. Until they're published here, Pixelpk's own website is the place to see the team's work."
-- **Footer one-liner:** "I design and ship AI agents, LLM-powered products and the software businesses around them."
+## 4. 🟡 Drafted copy: please review
 
-### FAQ · `src/content/faq.ts` (answered only from confirmed facts)
-1. What kind of AI work do you take on?
-2. Do you work with international clients?
-3. How does a project usually start?
-4. Are you open to partnerships or investment conversations?
-5. Where are you based, and what time zone?
-6. What is Pakistan Law Bot?
+- **Homepage** (`src/content/home.ts`):
+  - The sentence "I build *AI products* and the companies that ship them." (from the brief)
+  - The roles intro and each role's detail line and chips
+  - The Ventures, Work and Services intros, and the five process steps
+  - The AI lab intro, and the contact panel text
+- **AI lab** (`src/content/ai.ts`):
+  - The three principles ("Grounded in sources", "Built into the workflow", "People stay in the loop")
+  - The illustrative terminal run (generic; no real data)
+  - The engagement steps and the AI FAQ
+- **About** (`src/content/about.ts`):
+  - The intro paragraph, the quote "Build with *purpose*. Execute with clarity." (from the brief) and the facts list
+  - The three story chapters. The "Engineer" chapter's second sentence is an inference, so please confirm or edit it.
+- **Ventures** (`src/content/ventures.ts`): the taglines ("Let's grow digitally." is Pixelpk's own slogan; "Legal help, in English and Urdu." is drafted), plus each venture's problem, approach and "my role" text.
+- **FAQ** (`src/content/faq.ts`): six answers, written from confirmed facts.
+- **Privacy notice** (`src/app/privacy/page.tsx`): check it against your real Resend, Turnstile and Upstash setup and any legal requirements.
 
-### About · `src/content/timeline.ts`
-- Page title "From *engineer* to founder to AI builder." and the three chapter texts (Engineer / Founder / AI builder). The Engineer chapter's second sentence ("Engineering taught me to break big problems into small, shippable pieces…") is an inference; please confirm it or reword it.
-- "Beyond the desk" section: "Out from behind the *screen*." / "On stage with the team, at events, and in the mountains."
+## 5. 🟡 Photos · `src/content/culture.ts`
 
-### Ventures · `src/content/ventures.ts`
-- Per venture: `mission`, `problem`, `approach`, `ahmedsRole`, `technology[]`. The overviews restate confirmed facts; problem, approach and role are drafted.
-- Venture page section titles: "What it *is*.", "Why it *exists*.", "How I'm *involved*.", "Also *building*."
+- **Consent** from the team members in the group photos.
+- **Identification:** Ahmed is named in the alt text of these photos. I identified him from his portrait and headshot, so please check each one:
+  - On stage at the annual lunch
+  - The plaque presentation
+  - The Pakistan LawBot event
+  - Welcoming a guest
+  - The mountain photo
+  - "In Pixelpk colours"
+- The colleague beside Ahmed in some photos isn't named.
 
-### AI practice · `src/content/ai.ts`
-- Capability detail lines, pipeline step descriptions, the four engagement steps (Discovery call → Proof of value → Build & integrate → Run & improve) and the four AI FAQ answers.
-- Terminal demo script (generic, labelled illustrative).
+## 6. 🟢 Still useful
 
-### Contact, privacy, 404
-- Contact form messages (success, not configured, error, rate limited) in `src/components/contact/ContactForm.tsx`.
-- **Privacy notice** (`src/app/privacy/page.tsx`). It describes Resend, optional Turnstile and optional Upstash. Have it checked against your actual setup and any legal requirements before launch.
-- 404 copy: "This page took a *wrong* turn."
-
-### SEO
-- Default meta description (`site.description` in `src/content/site.ts`) and per-page descriptions in each `page.tsx`.
+- **Dated career milestones** (`src/content/about.ts`, `timeline`). The timeline stays hidden while the list is empty.
+- **Unconfirmed proof points** (`site.ts`): Stanford CodeX TechIndex and the Product Hunt launch. Set `confirmed: true` to show them.
+- **Domain:** confirm ahmedmusab.com and DNS, then set `NEXT_PUBLIC_SITE_URL`.
+- **Contact form:** the Resend keys (see README).
+- **A newsletter provider** (`flags.newsletter`), if you want a "Get notified" capture.

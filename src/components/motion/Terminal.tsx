@@ -2,61 +2,55 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
-import { cn } from "@/lib/cn";
 
-type Line = { kind: "input" | "muted" | "accent" | "output"; text: string };
+type Line =
+  | { kind: "input"; text: string }
+  | { kind: "step"; text: string; note: string; ok: boolean };
 
 /**
- * Terminal panel that types out an illustrative agent interaction once in
- * view, with a Replay button. Reduced motion: final text shown immediately.
- * The full transcript is always available to screen readers.
+ * Terminal panel: types the command, then reveals each step once in view.
+ * Replay restarts it. Reduced motion shows the final state. Screen readers get
+ * the full transcript.
  */
-export function Terminal({ title, label, lines }: { title: string; label: string; lines: readonly Line[] }) {
+export function Terminal({ title, label, lines, caption }: { title: string; label: string; lines: readonly Line[]; caption?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState<{ line: number; chars: number }>({ line: -1, chars: 0 });
+  const [typed, setTyped] = useState(0);
+  const [steps, setSteps] = useState(0);
   const [done, setDone] = useState(false);
-  const timer = useRef<number | null>(null);
+  const timers = useRef<number[]>([]);
+  const input = lines.find((l) => l.kind === "input")?.text ?? "";
+  const stepLines = lines.filter((l): l is Extract<Line, { kind: "step" }> => l.kind === "step");
 
-  const stop = () => {
-    if (timer.current) window.clearTimeout(timer.current);
-    timer.current = null;
+  const clear = () => {
+    timers.current.forEach((t) => window.clearTimeout(t));
+    timers.current = [];
   };
 
   const play = useCallback(() => {
-    stop();
+    clear();
+    setTyped(0);
+    setSteps(0);
     setDone(false);
-    let line = 0;
-    let chars = 0;
-    const step = () => {
-      const current = lines[line];
-      if (!current) {
-        setDone(true);
-        return;
-      }
-      const typed = current.kind === "input" || current.kind === "output";
-      if (typed && chars < current.text.length) {
-        chars += current.kind === "input" ? 1 : 3;
-        setShown({ line, chars: Math.min(chars, current.text.length) });
-        timer.current = window.setTimeout(step, current.kind === "input" ? 26 : 14);
-        return;
-      }
-      setShown({ line, chars: current.text.length });
-      line += 1;
-      chars = 0;
-      const pause = current.kind === "input" ? 420 : current.kind === "muted" && current.text.endsWith("…") ? 520 : 180;
-      timer.current = window.setTimeout(step, pause);
-    };
-    setShown({ line: 0, chars: 0 });
-    timer.current = window.setTimeout(step, 300);
-  }, [lines]);
+    let t = 250;
+    for (let i = 1; i <= input.length; i++) {
+      timers.current.push(window.setTimeout(() => setTyped(i), t));
+      t += 22;
+    }
+    t += 380;
+    stepLines.forEach((_, i) => {
+      timers.current.push(window.setTimeout(() => setSteps(i + 1), t));
+      t += 520;
+    });
+    timers.current.push(window.setTimeout(() => setDone(true), t));
+  }, [input, stepLines]);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      // Defer so state is not set synchronously inside the effect body.
       const id = window.setTimeout(() => {
-        setShown({ line: lines.length - 1, chars: lines[lines.length - 1].text.length });
+        setTyped(input.length);
+        setSteps(stepLines.length);
         setDone(true);
       }, 0);
       return () => window.clearTimeout(id);
@@ -73,69 +67,63 @@ export function Terminal({ title, label, lines }: { title: string; label: string
     io.observe(el);
     return () => {
       io.disconnect();
-      stop();
+      clear();
     };
-  }, [play, lines]);
+  }, [play, input.length, stepLines.length]);
 
   return (
-    <div ref={ref} className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-[#111316]">
-      <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+    <div ref={ref} className="theme-dark flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-paper/10 bg-[#0a0917] text-paper">
+      <div className="flex items-center justify-between gap-3 border-b border-paper/10 px-4 py-3">
         <span className="flex items-center gap-3">
           <span className="flex gap-1.5" aria-hidden="true">
-            <span className="size-2.5 rounded-full bg-paper/15" />
-            <span className="size-2.5 rounded-full bg-paper/15" />
-            <span className="size-2.5 rounded-full bg-paper/15" />
+            <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+            <span className="size-2.5 rounded-full bg-[#febc2e]" />
+            <span className="size-2.5 rounded-full bg-[#28c840]" />
           </span>
-          <span className="font-mono text-xs text-slate">{title}</span>
+          <span className="font-mono text-xs text-fog">{title}</span>
         </span>
-        <span className="rounded-full border border-lime/40 px-2.5 py-0.5 text-label !text-[0.625rem] text-lime">
+        <span className="rounded-full border border-accent-bright/40 px-2.5 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-accent-bright">
           {label}
         </span>
       </div>
 
-      <div className="relative min-h-[300px] flex-1 p-5 font-mono text-[0.8125rem] leading-[1.75] sm:text-sm">
-        <div className="sr-only">
-          {lines.map((l, i) => (
-            <p key={i}>{l.text}</p>
-          ))}
-        </div>
-        <div aria-hidden="true">
-          {lines.map((l, i) => {
-            if (i > shown.line) return null;
-            const text = i === shown.line ? l.text.slice(0, shown.chars) : l.text;
-            return (
-              <p
-                key={i}
-                className={cn(
-                  "whitespace-pre-wrap break-words",
-                  l.kind === "input" && "text-paper",
-                  l.kind === "muted" && "text-slate",
-                  l.kind === "accent" && "text-lime",
-                  l.kind === "output" && "mt-2 text-paper",
-                )}
-              >
-                {l.kind === "input" && <span className="text-lime">$ </span>}
-                {l.kind === "output" && <span className="text-slate">answer: </span>}
-                {text}
-                {i === shown.line && !done && <span className="term-cursor ml-0.5" />}
-              </p>
-            );
-          })}
-          {done && (
-            <p className="mt-1 text-paper">
-              <span className="text-lime">$ </span>
-              <span className="term-cursor" />
-            </p>
-          )}
-        </div>
+      <div className="sr-only">
+        <p>{input}</p>
+        {stepLines.map((s) => (
+          <p key={s.text}>
+            {s.text}: {s.note}
+          </p>
+        ))}
       </div>
 
-      <div className="flex items-center justify-between border-t border-line px-4 py-2.5">
-        <span className="text-label !text-[0.625rem] text-slate">No real data · generic example</span>
+      <div aria-hidden="true" className="flex-1 space-y-2.5 p-5 font-mono text-[0.8125rem] leading-relaxed sm:text-sm">
+        <p className="break-words">
+          <span className="text-accent-bright">$ </span>
+          {input.slice(0, typed)}
+          {typed < input.length && <span className="term-cursor ml-0.5" />}
+        </p>
+        {stepLines.slice(0, steps).map((s) => (
+          <p key={s.text} className="grid grid-cols-[1.25rem_5.5rem_1fr_auto] items-baseline gap-x-2">
+            <span className="text-fog">›</span>
+            <span className="text-paper">{s.text}</span>
+            <span className="truncate text-fog">{s.note}</span>
+            <span className={s.ok ? "text-[#4ade80]" : "rounded bg-paper/10 px-1.5 text-[0.6875rem] text-paper"}>{s.ok ? "✓" : "QUEUED"}</span>
+          </p>
+        ))}
+        {done && (
+          <p>
+            <span className="text-accent-bright">$ </span>
+            <span className="term-cursor" />
+          </p>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between gap-3 border-t border-paper/10 px-4 py-2.5">
+        <span className="text-[0.8125rem] text-fog">{caption}</span>
         <button
           type="button"
           onClick={play}
-          className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-medium text-paper transition-colors hover:text-lime"
+          className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-3 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-paper transition-colors hover:text-accent-bright"
         >
           <RotateCcw aria-hidden="true" className="size-3.5" />
           Replay

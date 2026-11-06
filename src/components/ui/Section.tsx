@@ -1,11 +1,10 @@
 import { cn } from "@/lib/cn";
-import { SectionHeading, SectionEndLink } from "./SectionHeading";
-
-export type Theme = "light" | "dark";
+import { SectionHead } from "./SectionHead";
 
 /**
- * A page section with the shared anatomy. `divider` draws the hairline that
- * separates sections inside the same chapter (brief §5.4).
+ * A page section with the shared anatomy. Dark chapters render as inset,
+ * rounded panels (`chapter-dark`), like the reference's product and contact
+ * chapters.
  */
 export function Section({
   id,
@@ -14,59 +13,45 @@ export function Section({
   label,
   title,
   intro,
+  meta,
   link,
-  divider = false,
   children,
   className,
-  headingClassName,
   contentClassName,
   bleed,
+  glow = false,
+  size = "display",
 }: {
   id?: string;
-  theme?: Theme;
+  theme?: "light" | "dark";
   index?: string;
   label: string;
   title: string;
   intro?: string;
+  meta?: string;
   link?: { label: string; href: string };
-  divider?: boolean;
   children?: React.ReactNode;
   className?: string;
-  headingClassName?: string;
   contentClassName?: string;
-  /** Content rendered outside the container (full-bleed), after the heading. */
+  /** Full-bleed content rendered after the container (e.g. a gallery). */
   bleed?: React.ReactNode;
+  glow?: boolean;
+  size?: "display" | "display-md";
 }) {
   const headingId = id ? `${id}-title` : undefined;
+  const dark = theme === "dark";
   return (
     <section
       id={id}
       aria-labelledby={headingId}
-      className={cn(theme === "dark" ? "theme-dark" : "theme-light", "relative", className)}
+      className={cn(dark ? "chapter-dark theme-dark relative" : "theme-light relative", className)}
     >
-      {divider && (
-        <div className="container-site" aria-hidden="true">
-          <div className="hairline" />
-        </div>
-      )}
-      <div className="py-section">
-        <div className="container-site">
-          <SectionHeading
-            id={headingId}
-            index={index}
-            label={label}
-            title={title}
-            intro={intro}
-            link={link}
-            className={headingClassName}
-          />
-          {children && <div className={cn("mt-14 xl:mt-20", contentClassName)}>{children}</div>}
-        </div>
-        {bleed}
-        <div className="container-site">
-          <SectionEndLink link={link} />
-        </div>
+      {dark && glow && <div aria-hidden="true" className="glow-accent pointer-events-none absolute inset-0 -z-10" />}
+      <div className={cn("container-site", bleed ? "pt-[var(--section-pad)]" : "py-section")}>
+        <SectionHead id={headingId} index={index} label={label} title={title} intro={intro} meta={meta} link={link} size={size} />
+        {children && <div className={cn("mt-12 xl:mt-16", contentClassName)}>{children}</div>}
       </div>
+      {bleed && <div className="mt-12 pb-[var(--section-pad)] xl:mt-16">{bleed}</div>}
     </section>
   );
 }

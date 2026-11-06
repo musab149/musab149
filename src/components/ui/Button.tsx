@@ -1,63 +1,70 @@
+import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import { HoverPrefetchLink as Link } from "./HoverPrefetchLink";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn, isExternal } from "@/lib/cn";
 
-type Variant = "primary" | "secondary" | "text";
+type Variant = "ink" | "paper" | "outline" | "text";
 
 /**
- * Buttons & links (brief §5.6). Internal links use next/link; external links
- * open in a new tab with rel="noopener noreferrer" and show ↗.
+ * Pill buttons in mono caps with a crimson icon disc (ink / paper), an outline
+ * pill, or a mono text link. External links open in a new tab with ↗.
  */
 export function Button({
   href,
   children,
-  variant = "primary",
+  variant = "ink",
   className,
-  icon = true,
   full = false,
+  icon,
   ...rest
 }: {
   href: string;
   children: React.ReactNode;
   variant?: Variant;
   className?: string;
-  icon?: boolean;
   full?: boolean;
+  icon?: "right" | "down" | "ext" | "none";
   "aria-label"?: string;
 }) {
-  const external = isExternal(href) && !href.startsWith("mailto:");
   const mail = href.startsWith("mailto:");
-  const Icon = external ? ArrowUpRight : ArrowRight;
+  const external = isExternal(href) && !mail;
+  const kind = icon ?? (external ? "ext" : href.startsWith("#") || href.startsWith("/#") ? "down" : "right");
+  const Icon = kind === "ext" ? ArrowUpRight : kind === "down" ? ArrowDown : ArrowRight;
+
   const classes = cn(
-    variant === "text" ? "link-draw font-semibold" : "btn",
-    variant === "primary" && "btn-primary",
-    variant === "secondary" && "btn-secondary",
-    full && "w-full sm:w-auto",
+    variant === "text" ? "link-draw link-mono text-fg" : "btn",
+    variant === "ink" && "btn-ink",
+    variant === "paper" && "btn-paper",
+    variant === "outline" && "btn-outline",
+    external && "btn-ext",
+    full && "w-full justify-between sm:w-auto",
     className,
   );
-  const content = (
-    <>
-      <span className={variant === "text" ? "link-text" : undefined}>{children}</span>
-      {icon && !mail && (
-        <Icon
-          aria-hidden="true"
-          className={cn("btn-arrow size-4 shrink-0", external && "btn-arrow-ext")}
-          strokeWidth={2}
-        />
-      )}
-      {external && <span className="sr-only"> (opens in a new tab)</span>}
-    </>
-  );
+
+  const content =
+    variant === "text" ? (
+      <>
+        <span className="link-text">{children}</span>
+        {kind !== "none" && <Icon aria-hidden="true" className="arrow-shift size-3.5 shrink-0" strokeWidth={2} />}
+      </>
+    ) : (
+      <>
+        <span>{children}</span>
+        {kind !== "none" &&
+          (variant === "outline" ? (
+            <Icon aria-hidden="true" className="size-3.5 shrink-0" strokeWidth={2} />
+          ) : (
+            <span className="btn-icon" aria-hidden="true">
+              <Icon className="size-4" strokeWidth={2} />
+            </span>
+          ))}
+      </>
+    );
 
   if (external || mail) {
     return (
-      <a
-        href={href}
-        className={classes}
-        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-        {...rest}
-      >
+      <a href={href} className={classes} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})} {...rest}>
         {content}
+        {external && <span className="sr-only"> (opens in a new tab)</span>}
       </a>
     );
   }
@@ -68,23 +75,10 @@ export function Button({
   );
 }
 
-/** Inline external link with ↗ for body copy and lists. */
-export function ExternalLink({
-  href,
-  children,
-  className,
-}: {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
+/** Inline external link with ↗. */
+export function ExternalLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn("link-draw group/ext", className)}
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className={cn("link-draw", className)}>
       <span className="link-text">{children}</span>
       <ArrowUpRight aria-hidden="true" className="size-[0.9em] shrink-0" />
       <span className="sr-only"> (opens in a new tab)</span>

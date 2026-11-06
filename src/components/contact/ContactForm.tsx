@@ -117,13 +117,13 @@ export function ContactForm({ email, configured }: { email?: string; configured:
 
   if (status === "success") {
     return (
-      <div ref={statusRef} tabIndex={-1} role="status" className="rounded-[var(--radius-card)] border border-line bg-card p-8 outline-none xl:p-12">
-        <span className="grid size-12 place-items-center rounded-full bg-lime text-ink">
+      <div ref={statusRef} tabIndex={-1} role="status" className="card p-8 outline-none xl:p-12">
+        <span className="grid size-12 place-items-center rounded-full bg-accent text-white">
           <Check aria-hidden="true" className="size-5" />
         </span>
-        <h2 className="mt-8 text-h3 text-fg">Thank you. Your message is on its way.</h2>
+        <h2 className="title-caps mt-8 !text-[1.75rem] text-fg">Thank you. Your message is on its way.</h2>
         <p className="mt-3 max-w-[48ch] text-muted">It has been delivered to my inbox. I&apos;ll reply to the email address you gave.</p>
-        <button type="button" onClick={() => setStatus("idle")} className="link-draw mt-8 font-semibold text-fg">
+        <button type="button" onClick={() => setStatus("idle")} className="link-draw link-mono mt-8 text-fg">
           <span className="link-text">Send another message</span>
         </button>
       </div>
@@ -140,7 +140,7 @@ export function ContactForm({ email, configured }: { email?: string; configured:
 
   const inputCls = (name: ContactField) =>
     cn(
-      "mt-2 block w-full rounded-[6px] border bg-paper px-4 py-3.5 text-base text-ink placeholder:text-slate-strong/70 transition-colors",
+      "mt-2 block w-full rounded-[12px] border bg-paper-2 px-4 py-3.5 text-base text-ink placeholder:text-mist/70 transition-colors",
       "focus-visible:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
       errors[name] ? "border-[#B42318]" : "border-line-strong hover:border-ink/40",
     );
@@ -267,17 +267,21 @@ export function ContactForm({ email, configured }: { email?: string; configured:
           type="submit"
           disabled={status === "submitting"}
           aria-disabled={status === "submitting"}
-          className="btn btn-primary w-full disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+          className="btn btn-ink w-full justify-between disabled:cursor-wait disabled:opacity-70 sm:w-auto"
         >
           {status === "submitting" ? (
             <>
-              <span className="spinner" aria-hidden="true" />
-              Sending…
+              <span>Sending…</span>
+              <span className="btn-icon" aria-hidden="true">
+                <span className="spinner" />
+              </span>
             </>
           ) : (
             <>
-              Send enquiry
-              <ArrowRight aria-hidden="true" className="btn-arrow size-4" />
+              <span>Send enquiry</span>
+              <span className="btn-icon" aria-hidden="true">
+                <ArrowRight className="size-4" />
+              </span>
             </>
           )}
         </button>

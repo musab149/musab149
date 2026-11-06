@@ -8,12 +8,14 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { RevealObserver } from "@/components/motion/RevealObserver";
 import "./globals.css";
 
-// Self-hosted, subset (latin) variable fonts — no third-party requests.
-const manrope = localFont({
-  src: "./fonts/manrope-latin-wght.woff2",
-  variable: "--font-manrope",
-  weight: "200 800",
+// Self-hosted, latin-subset variable fonts — no third-party requests.
+// Archivo carries both axes: condensed black for display, normal width for text.
+const archivo = localFont({
+  src: "./fonts/archivo-latin-wdth.woff2",
+  variable: "--font-archivo",
+  weight: "100 900",
   display: "swap",
+  declarations: [{ prop: "font-stretch", value: "62% 125%" }],
   fallback: ["ui-sans-serif", "system-ui", "Segoe UI", "Arial"],
   adjustFontFallback: "Arial",
 });
@@ -40,7 +42,7 @@ const jetbrainsMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} · Founder & AI specialist`,
+    default: `${site.name} · ${site.role}`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
@@ -53,12 +55,12 @@ export const metadata: Metadata = {
     siteName: site.name,
     locale: site.locale,
     url: "/",
-    title: `${site.name} · Founder & AI specialist`,
+    title: `${site.name} · ${site.role}`,
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} · Founder & AI specialist`,
+    title: `${site.name} · ${site.role}`,
     description: site.description,
   },
   formatDetection: { telephone: false, email: false, address: false },
@@ -66,7 +68,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F7F7F4" },
+    { media: "(prefers-color-scheme: light)", color: "#F3F2ED" },
     { media: "(prefers-color-scheme: dark)", color: site.themeColor },
   ],
   colorScheme: "light",
@@ -76,19 +78,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-GB"
-      className={`${manrope.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
+      className={`${archivo.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>
         {/* Marks JS as available so reveal styles only hide content when they can also show it. */}
-        <script
-          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body id="top">
         <a
           href="#main"
-          className="btn btn-primary fixed left-4 top-4 z-[100] -translate-y-24 focus-visible:translate-y-0"
+          className="btn btn-ink fixed left-4 top-4 z-[100] -translate-y-24 focus-visible:translate-y-0"
         >
           Skip to content
         </a>

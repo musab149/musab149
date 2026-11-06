@@ -5,7 +5,7 @@ import fs from "node:fs";
 const { chromium } = createRequire(import.meta.url)("playwright");
 const base = process.argv[2] || "http://localhost:3200";
 const out = process.argv[3] || "docs/screenshots";
-const pages = { home: "/", about: "/about", ventures: "/ventures", "venture-pixelpk": "/ventures/pixelpk-technologies", "venture-pakistan-law-bot": "/ventures/pakistan-law-bot", work: "/work", ai: "/ai", insights: "/insights", contact: "/contact", privacy: "/privacy", "not-found": "/this-page-does-not-exist" };
+const pages = { home: "/", about: "/about", ventures: "/ventures", "venture-pixelpk": "/ventures/pixelpk-technologies", "venture-pakistan-lawbot": "/ventures/pakistan-lawbot", work: "/work", "case-study-pakistan-lawbot": "/work/pakistan-lawbot", "case-study-kixx": "/work/kixx", ai: "/ai", insights: "/insights", contact: "/contact", privacy: "/privacy", "not-found": "/this-page-does-not-exist" };
 fs.mkdirSync(out, { recursive: true });
 const browser = await chromium.launch();
 for (const w of [375, 768, 1440]) {

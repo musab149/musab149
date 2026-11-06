@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { allProjects, getProject, nextProject } from "@/lib/work";
 import { CaseStudy } from "@/components/work/CaseStudy";
-import { ContactCTA } from "@/components/home/ContactCTA";
+import { ContactPanel } from "@/components/home/ContactPanel";
 import { pageMetadata } from "@/lib/metadata";
 
 export const dynamicParams = false;
@@ -15,7 +15,9 @@ export async function generateMetadata({ params }: PageProps<"/work/[slug]">): P
   const { slug } = await params;
   const p = getProject(slug);
   if (!p) return {};
-  return pageMetadata({ title: p.title, description: p.summary, path: `/work/${p.slug}` });
+  const meta = pageMetadata({ title: `${p.name} case study`, description: p.summary, path: `/work/${p.slug}` });
+  // The case study is Pixelpk's; its canonical home is pixelpk.com.
+  return { ...meta, alternates: { canonical: p.source } };
 }
 
 export default async function ProjectPage({ params }: PageProps<"/work/[slug]">) {
@@ -25,7 +27,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
   return (
     <>
       <CaseStudy project={project} next={nextProject(project.slug)} />
-      <ContactCTA />
+      <ContactPanel />
     </>
   );
 }

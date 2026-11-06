@@ -6,14 +6,14 @@ export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
 export default async function AppleIcon() {
-  const font = await readFile(path.join(process.cwd(), "src/assets/og-fonts/manrope-700.woff"));
+  const font = await readFile(path.join(process.cwd(), "src/assets/og-fonts/anton-400.woff"));
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#17191D", position: "relative" }}>
-        <div style={{ fontFamily: "Manrope", fontSize: 72, fontWeight: 700, color: "#F7F7F4", letterSpacing: -3 }}>AM</div>
-        <div style={{ position: "absolute", right: 34, top: 34, width: 18, height: 18, borderRadius: 18, background: "#B8F36B" }} />
+      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#0D0C1D", position: "relative" }}>
+        <div style={{ fontFamily: "Anton", fontSize: 84, color: "#F3F2ED" }}>AM</div>
+        <div style={{ position: "absolute", right: 30, top: 30, width: 20, height: 20, borderRadius: 20, background: "#D9234C" }} />
       </div>
     ),
-    { ...size, fonts: [{ name: "Manrope", data: font, weight: 700, style: "normal" }] },
+    { ...size, fonts: [{ name: "Anton", data: font, weight: 400, style: "normal" }] },
   );
 }

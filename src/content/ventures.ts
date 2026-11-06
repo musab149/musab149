@@ -1,41 +1,36 @@
 /**
- * ventures.ts — companies and products Ahmed is building.
+ * ventures.ts — the companies and products Ahmed is building.
  *
- * To add a venture: append an object to `allVentures` (copy an existing one),
- * give it a unique `slug`, and set `published: true`. Its card appears on the
- * homepage and /ventures, and /ventures/<slug> is generated automatically.
- *
- * Facts only: anything not confirmed stays empty and is hidden by the UI.
+ * Logos and screenshots come from the ventures' own websites; figures are as
+ * published on pixelpk.com (home page and the Pakistan LawBot case study).
+ * To add a venture: copy an object, give it a unique slug, set published: true.
  */
 
 import { flags } from "./site";
 
-export type VentureImage = {
-  src: string;
-  width: number;
-  height: number;
-  alt: string;
-  caption?: string;
-};
-
-export type Milestone = { date: string; title: string; body?: string };
+export type Shot = { src: string; width: number; height: number; alt: string };
+export type Figure = { value: string; label: string };
 
 export type Venture = {
   slug: string;
   published: boolean;
   name: string;
-  /** Short wordmark split for the typographic logo: [main, accent]. */
-  wordmark: [string, string];
-  /** Official logo file in /public/logos. Leave empty to use the typographic wordmark. */
-  logo?: { src: string; width: number; height: number };
+  logo: { src: string; width: number; height: number; onDark?: string };
   url: string;
   domain: string;
   /** Ahmed's role, as shown on the card. */
   role: string;
   category: string;
+  /** One line in the serif italic under the name. */
   tagline: string;
-  status: "Live" | "In development";
+  description: string;
+  status: string;
+  /** Brand tint for the card glow. */
+  tint: string;
+  figures: Figure[];
   capabilities: string[];
+  desktop: Shot;
+  mobile: Shot;
   /** Detail page */
   mission: string;
   overview: string;
@@ -43,12 +38,8 @@ export type Venture = {
   approach: string;
   ahmedsRole: string;
   technology: string[];
-  surfaces?: string[];
-  milestones: Milestone[];
-  /** Real product screenshots (from the venture's own site). Empty = use `photo`. */
-  screenshots: VentureImage[];
-  /** Real photograph used in the device frame until screenshots exist. */
-  photo: VentureImage;
+  /** Related case study on /work, if any. */
+  caseStudy?: string;
 };
 
 const allVentures: Venture[] = [
@@ -56,121 +47,105 @@ const allVentures: Venture[] = [
     slug: "pixelpk-technologies",
     published: true,
     name: "Pixelpk Technologies",
-    wordmark: ["Pixel", "pk"],
+    logo: { src: "/logos/pixelpk-ink.png", width: 656, height: 181, onDark: "/logos/pixelpk-white.png" },
     url: "https://pixelpk.com/",
     domain: "pixelpk.com",
-    role: "Founder & CEO",
-    category: "AI-first software company",
-    tagline: "AI agents, custom software and engineering teams for growing businesses.",
-    status: "Live",
-    capabilities: [
-      "Custom AI agents",
-      "LLM fine-tuning",
-      "Workflow automation",
-      "Web & mobile",
-      "Staff augmentation",
+    role: "Founder",
+    category: "AI & software company",
+    tagline: "Let's grow digitally.",
+    description:
+      "An AI and software development company headquartered in Lahore: AI agents and LLM products, mobile apps, SaaS platforms, cloud and Microsoft solutions, for start-ups and enterprises in five countries.",
+    status: "Live · Lahore HQ",
+    tint: "#4C1D95",
+    figures: [
+      { value: "50+", label: "team members" },
+      { value: "1,000+", label: "projects shipped" },
+      { value: "5+", label: "countries served" },
+      { value: "16", label: "published case studies" },
     ],
-    mission:
-      "An AI-first engineering company that builds the agents, software and teams growing businesses need.",
-    overview:
-      "Pixelpk Technologies is a software company positioned as an AI-first engineering company. Its services cover custom AI agents, LLM fine-tuning, workflow automation with n8n, custom software, web and mobile applications, and staff augmentation.",
-    problem:
-      "Most growing businesses want AI that does real work, but few have the engineering team to design it, build it into their products and keep it running.",
-    approach:
-      "Pair AI engineering with solid software delivery. Agents, retrieval and automation are built into the products and workflows a business already uses, by a team that can also own the web and mobile surfaces around them.",
-    ahmedsRole:
-      "Founder and CEO. I set the company's direction, lead its technical strategy and work with clients and partners on what to build next.",
-    technology: [
-      "Custom AI agents",
-      "LLM fine-tuning",
-      "n8n workflow automation",
-      "Custom software",
-      "Web applications",
-      "Mobile applications",
-    ],
-    milestones: [],
-    screenshots: [],
-    photo: {
-      src: "/images/culture-annual-lunch-group.jpg",
-      width: 1800,
-      height: 1092,
-      alt: "The Pixelpk team gathered for a group photo in front of the company backdrop at its annual lunch",
-      caption: "The Pixelpk team at the annual lunch",
+    capabilities: ["Agentic AI & ML", "Mobile apps", "SaaS & software", "Cloud", "Microsoft", "Digital marketing"],
+    desktop: {
+      src: "/images/ventures/pixelpk-site.webp",
+      width: 1440,
+      height: 900,
+      alt: "The pixelpk.com home page: “Let’s Grow Digitally” on a deep blue-to-magenta gradient",
     },
+    mobile: {
+      src: "/images/ventures/pixelpk-site-mobile.webp",
+      width: 780,
+      height: 1688,
+      alt: "The pixelpk.com home page on a phone",
+    },
+    mission: "An AI-first engineering company that builds the agents, software and teams growing businesses need.",
+    overview:
+      "Pixelpk Technologies is an AI and software development company headquartered in Lahore, Pakistan. Its services cover agentic AI and machine learning, mobile and software development, Microsoft technologies, cloud and digital transformation, QA, UI/UX design, digital marketing and business websites, delivered as an extended team, a managed dedicated team or a custom-built solution.",
+    problem:
+      "Most growing businesses want AI that does real work, but few have the team to design it, build it into their products and keep it running.",
+    approach:
+      "Pair AI engineering with solid software delivery: agents, retrieval and automation built into the products and workflows a business already uses, by a team that can also own the web and mobile surfaces around them.",
+    ahmedsRole:
+      "I'm one of Pixelpk's founders. I lead marketing and growth, from strategy and brand to the campaigns and content that bring clients to the company, and I work with clients and partners on what to build next.",
+    technology: [
+      "OpenAI · LangChain · LLaMA",
+      "React · Next.js · Node.js · Laravel",
+      "Flutter · FlutterFlow",
+      "AWS · Azure · Docker",
+      ".NET · Dynamics 365 · Power Apps",
+      "Playwright · Cypress",
+    ],
   },
   {
-    slug: "pakistan-law-bot",
+    slug: "pakistan-lawbot",
     published: true,
-    name: "Pakistan Law Bot",
-    wordmark: ["Pakistan Law", "Bot"],
+    name: "Pakistan LawBot",
+    logo: { src: "/logos/pakistan-lawbot.png", width: 1007, height: 251, onDark: "/logos/pakistan-lawbot-white.png" },
     url: "https://pakistanlawbot.com/",
     domain: "pakistanlawbot.com",
-    // Confirmed: Ahmed leads Pakistan Law Bot. Exact title (Founder / Co-founder /
-    // Product Lead) is pending — see CONTENT-TO-CONFIRM.md.
+    // Confirmed: Ahmed leads Pakistan LawBot. Exact title is pending (CONTENT-TO-CONFIRM.md).
     role: "Lead",
-    category: "Legal AI platform",
-    tagline:
-      "AI legal research for Pakistan: judgments, statutes and smart guidance in one place.",
-    status: "Live",
-    capabilities: [
-      "Legal Q&A",
-      "Case-law search",
-      "Document analysis",
-      "Drafting",
-      "Lawyer marketplace",
-      "WhatsApp bot",
-      "MCP server",
+    category: "Legal AI · Pixelpk's own product",
+    tagline: "Legal help, in English and Urdu.",
+    description:
+      "An AI legal assistant for Pakistani law: research with cited judgments, documents drafted with AI, contracts checked for risk, and a marketplace of verified lawyers.",
+    status: "Live · Web, WhatsApp & mobile",
+    tint: "#166534",
+    figures: [
+      { value: "600+", label: "API endpoints" },
+      { value: "26", label: "practice areas" },
+      { value: "13", label: "AI-drafted document types" },
+      { value: "20", label: "MCP tools for AI assistants" },
     ],
-    mission: "Make Pakistani law searchable, understandable and actionable with AI.",
+    capabilities: ["Legal research", "AI drafting", "Document analysis", "Lawyer marketplace", "WhatsApp bot", "MCP server"],
+    desktop: {
+      src: "/images/ventures/lawbot-site.webp",
+      width: 1440,
+      height: 900,
+      alt: "The pakistanlawbot.com home page: Pakistan’s first lawyer marketplace and AI-powered legal assistance",
+    },
+    mobile: {
+      src: "/images/ventures/lawbot-site-mobile.webp",
+      width: 780,
+      height: 1688,
+      alt: "The pakistanlawbot.com home page on a phone",
+    },
+    mission: "Make justice accessible for every Pakistani: research, drafting and a verified lawyer, in plain English or Urdu.",
     overview:
-      "Pakistan Law Bot is an AI-powered legal platform for Pakistani law. It brings AI legal Q&A, case-law and statute search, document analysis and legal drafting together with a verified-lawyer marketplace, a WhatsApp bot, Android and iOS apps, and an MCP server that lets Claude query Pakistani law.",
+      "Pakistan LawBot is an AI-powered legal platform for Pakistani law. It brings AI legal Q&A, case-law and statute search, document analysis and legal drafting together with a verified-lawyer marketplace, a WhatsApp bot, Android and iOS apps, and an MCP server that lets AI assistants such as Claude query Pakistani law.",
     problem:
       "Pakistani legal information is spread across judgments, statutes and amendments. It is slow to search for lawyers and hard to approach for everyone else.",
     approach:
-      "Ground the AI in Pakistani law. Retrieve the relevant judgments and statutes first, then help people ask questions, analyse documents, draft, and reach a verified lawyer when they need one, on the web, on WhatsApp, on mobile and inside Claude.",
+      "Ground the AI in Pakistani law: retrieve the relevant judgments and statutes first, cite them by default, mark drafts for review by an advocate, and reach people where they are, on the web, on WhatsApp, on mobile and inside other AI assistants.",
     ahmedsRole:
-      "I lead Pakistan Law Bot: product direction, the AI and retrieval approach, and the team that builds and ships it.",
+      "I lead Pakistan LawBot: product direction, the AI and retrieval approach, and the team that builds and ships it.",
     technology: [
-      "Retrieval over case law and statutes",
-      "LLM-powered Q&A and drafting",
-      "Document analysis",
-      "MCP server for Claude",
-      "WhatsApp bot",
-      "Android & iOS apps",
+      "React · TypeScript · Vite",
+      "Node.js · Express",
+      "MongoDB (data, vector & keyword search)",
+      "Python AI services",
+      "Anthropic · OpenAI · Gemini",
+      "MCP server · WhatsApp · Stripe",
     ],
-    surfaces: ["Web", "WhatsApp", "Android", "iOS", "MCP (Claude)"],
-    milestones: [],
-    screenshots: [],
-    photo: {
-      src: "/images/event-pakistan-law-bot.jpg",
-      width: 1593,
-      height: 1800,
-      alt: "Ahmed Musab standing with four colleagues in suits in front of a Pakistan Law Bot banner at a hotel event",
-      caption: "At a Pakistan Law Bot event",
-    },
-  },
-  {
-    // Third venture — only shown when flags.aivastark is true AND the copy below is filled in.
-    slug: "aivastark",
-    published: flags.aivastark,
-    name: "Aivastark",
-    wordmark: ["Aiva", "stark"],
-    url: "",
-    domain: "",
-    role: "",
-    category: "",
-    tagline: "",
-    status: "Live",
-    capabilities: [],
-    mission: "",
-    overview: "",
-    problem: "",
-    approach: "",
-    ahmedsRole: "",
-    technology: [],
-    milestones: [],
-    screenshots: [],
-    photo: { src: "/images/ahmed-musab-headshot.jpg", width: 957, height: 957, alt: "" },
+    caseStudy: "pakistan-lawbot",
   },
 ];
 
@@ -183,3 +158,6 @@ export const ventures: Venture[] = allVentures.filter(isComplete);
 export function getVenture(slug: string) {
   return ventures.find((v) => v.slug === slug);
 }
+
+/** Aivastark is shown as a venture only when flags.aivastark is on. */
+export const showAivastark = flags.aivastark;

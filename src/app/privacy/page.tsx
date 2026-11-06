@@ -43,7 +43,7 @@ const sections = [
 export default function PrivacyPage() {
   return (
     <>
-      <PageHero label="Privacy" title="Privacy, in *plain* language." intro="What this site collects, why, and what happens to it." />
+      <PageHero label="Privacy" title={"Privacy, in\n*plain* language."} intro="What this site collects, why, and what happens to it." />
       <section aria-label="Privacy notice" className="theme-light">
         <div className="container-site">
           <div className="hairline" aria-hidden="true" />
@@ -51,7 +51,7 @@ export default function PrivacyPage() {
             <div className="col-span-12 lg:col-span-8 lg:col-start-3">
               {sections.map((s, i) => (
                 <div key={s.h} className="border-b border-line py-10 first:pt-0">
-                  <h2 className="text-h3 text-fg">
+                  <h2 className="title-caps text-fg">
                     <span className="mr-4 text-label text-muted">{String(i + 1).padStart(2, "0")}</span>
                     {s.h}
                   </h2>

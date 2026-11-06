@@ -1,74 +1,56 @@
 # Decisions log
 
-Decisions made while building ahmedmusab.com, with the reason for each. Newest context first within each group.
+Why the site is built the way it is. **Version 2** (the redesign that uses anasw.com as the reference and imports the Pixelpk portfolio) comes first. Version 1 decisions that still apply follow it.
 
-## Environment & repository
+## Version 2: the redesign
 
-| # | Decision | Why |
-|---|---|---|
-| D1 | **Moved the existing files into `legacy/alkhidmat-clinic/`** (with `git mv`, nothing deleted). | The working repo (`musab149/musab149`) did not contain the old portfolio. It held an unrelated static prototype, "Alkhidmat Clinic Management System" (React via CDN + Babel). It still runs as-is from that folder (open `legacy/alkhidmat-clinic/index.html`). It is excluded from lint and typecheck. |
-| D2 | **Portfolio, product screenshots and official logos are not on the site yet.** | The build environment's network policy blocked `pixelpk.com` and `pakistanlawbot.com` (DNS failure and proxy 403). The brief forbids inventing content, so `src/content/work.ts` ships empty with a documented schema and an honest empty state that links to pixelpk.com. Venture frames show real photos until screenshots are supplied. Wordmarks are typographic, which the brief allows as a fallback. |
-| D3 | **Photos downloaded through the Google Drive connector** into `assets/source/` (originals, not served). Optimised copies are in `public/images/`. | The direct Drive URL was blocked, but the connector worked. All 18 files were viewed before placement. EXIF was stripped on export. A 2-pixel black line on the top edge of `Ahmed Musab.jpg` and `musab dp.jpg` was cropped off. |
-| D4 | **Fonts are self-hosted from Fontsource files** (Manrope variable, Instrument Serif Italic, JetBrains Mono variable; latin subset) via `next/font/local`, with OFL licences in `src/app/fonts/`. | `fonts.googleapis.com` was blocked, so `next/font/google` would fail the build. Local files also mean no third-party request at runtime. Static Manrope/Instrument WOFF files in `src/assets/og-fonts/` feed the OG image renderer (Satori can't read WOFF2). |
-| D5 | **Versions: Next 16.4.5, React 19.3, TypeScript 5.9, ESLint 9, Tailwind 4.3, Motion 14.** | These are the latest stable releases at build time, as pinned together by `create-next-app@16.4.5`. TypeScript 7 and ESLint 10 exist, but the Next 16.4 template and `eslint-config-next` target TS 5 and ESLint 9. Keeping them compatible beat chasing the newest major. |
-| D6 | **`cacheComponents` (PPR) is turned off** even though the Next 16.4 template enables it. | Every page is static content. Cache Components forbids empty `generateStaticParams`, and both `/work/[slug]` and `/insights/[slug]` are empty right now. It also forbids `new Date()` in prerendered trees (the footer year). It brings no benefit for this site. |
-
-## Content & truthfulness
+### Reference, brand and content sources
 
 | # | Decision | Why |
 |---|---|---|
-| C1 | All unconfirmed values live in `src/content/site.ts` and render nothing while empty: LinkedIn, email, booking, GitHub, X, YouTube, proof points (`confirmed: false`) and Aivastark (`flags.aivastark`). | Brief §3.3: never show placeholder text in production. |
-| C2 | Pakistan Law Bot role is shown as **"Lead"**. | The brief confirms Ahmed *leads* the product. His exact title (Founder / Co-founder / Product Lead) is pending, and changing one field in `ventures.ts` updates it everywhere. |
-| C3 | **The Work (04) and Insights (10) sections stay visible with honest empty states** instead of being hidden. | Hiding Work would put the dark Ventures chapter directly against the dark AI lab chapter and break the light/dark rhythm (§5.4). The renumbering logic still exists in `src/app/page.tsx` for any section that is hidden. |
-| C4 | `WORK_PREVIEW=1 npm run dev` fills the work grid with obviously fake **"Sample project"** cards, with a visible "Design preview" banner. | It lets the sticky stacking cards, filters and case-study template be reviewed before real projects exist. It is ignored in production builds (`NODE_ENV` guard in `src/lib/work.ts`). |
-| C5 | Insights ships with **zero published articles**. A format template (`_example-article.mdx`, `draft: true`) renders only in `next dev`. | The brief forbids placeholder articles presented as published. |
-| C6 | Terminal demo copy is generic: an employment-contract question with generic file names. It is labelled "Illustrative demo · No real data". | Brief §7.05: no invented cases, citations, statistics or client data. |
-| C7 | Photo captions describe only what's visible or given in the file name. "Fairy Meadows" appears only because it is printed on that photo. Alt text names Ahmed where he is recognisable from the confirmed portrait and headshot. These identifications are listed for confirmation. | Brief §4.1. |
-| C8 | Toolbox shows **n8n, MCP, Flutter** only. | These are the tools the brief lists as known. |
+| V1 | **anasw.com was studied live** and its structure and level of craft were adopted. That covers the status line, the poster-scale name, the numbered pill nav, the roles accordion, stacked product cards, a 3×3 services grid, the process line with a toolbox, an AI lab with a terminal and flow diagrams, About with photo cards, the FAQ, the dark contact chapter and the outlined-name footer. **No text, metrics, images, branding or code were copied.** | You asked for anasw.com as the reference. anasw.com is Syed Anas's personal site, so only the patterns carry over. |
+| V2 | **The tone is more formal than the reference.** The orange brush-script accent becomes an Instrument Serif italic word. There's no lanyard, tilted ticker or barcode. The credential card is tilted just 3°. | You asked for "formally designed… minimalistic and decent". |
+| V3 | **The palette is tinted to Pixelpk**: paper `#F3F2ED`, navy-black ink `#0D0C1D`, crimson accent `#D9234C`. Small text uses `#C21B42` on light and `#FF6B86` on dark to stay AA-compliant. | It ties the site to pixelpk.com's navy and pink-red CTA gradient, keeps it distinct from anasw.com's orange, and passes contrast checks. |
+| V4 | **Type:** Archivo variable (width and weight axes) does both jobs, condensed black for display and normal width for text. Instrument Serif italic is the accent and JetBrains Mono the labels, not preloaded. Anton appears only in generated OG images. | One family keeps the site cohesive and formal. Satori, the OG renderer, can't use variable axes. Not preloading the mono font saved bandwidth on the LCP path. |
+| V5 | **The portfolio is imported from pixelpk.com/case-studies**: all 16 case studies, with their text, figures and images as Pixelpk publishes them (`src/content/work.ts`, generated once and editable by hand). Each `/work/<slug>` page sets its canonical URL to the pixelpk.com case study and links to it. | You said to take the portfolio from pixelpk.com. The canonical link avoids duplicate-content problems between the two sites. |
+| V6 | **Case-study artwork is used as published.** These are Pixelpk's own device-mockup compositions, shown in rounded panels with no extra CSS frames. **Venture screenshots were captured from the live sites** (1440×900 desktop, 390×844 @2× mobile) and shown in CSS browser and phone frames. | Real screens, no fake mockups and no double frames. |
+| V7 | **Pixelpk figures, testimonials and the Clutch rating come from pixelpk.com.** That's 50+ team, 1,000+ projects, 5+ countries and 16 case studies, four client quotes, and "Rated 4.9/5 on Clutch". Each is shown with a source note and can be turned off in `site.ts` (`flags.pixelpkFigures`, `flags.testimonials`, `proofPoints`). | Ahmed's company publishes them itself. They're attributed and easy to switch off. |
+| V8 | **Ahmed's title stays "Founder & CEO" (from the brief)** in config, and the prose says "one of the founders". | pixelpk.com/team lists **two founders**: Syed Anas Waqar ("Founder · Director, Development") and Ahmed Musab ("Founder · Director, Marketing"). anasw.com says Syed Anas founded Pixelpk and Pakistan LawBot. This conflict is flagged in CONTENT-TO-CONFIRM.md rather than resolved by me. |
+| V9 | **Aivastark appears only as a Pixelpk case study** ("Our product · AI agents"), not as Ahmed's venture (`flags.aivastark` is off). | pixelpk.com publishes it as Pixelpk's work. Ahmed's personal role in it isn't confirmed. |
+| V10 | **Network access:** a personal environment "musab149" was created with your approval. It allows anasw.com, pixelpk.com and pakistanlawbot.com, and its setup script runs `npm ci`. | Those sites were blocked in the shared Default environment. The setup script is unproven until a fresh session starts on that environment. |
 
-## Design system
-
-| # | Decision | Why |
-|---|---|---|
-| S1 | Tailwind v4 `@theme` holds the raw palette. **Chapter-aware semantic tokens** (`text-fg`, `text-muted`, `bg-card`, `border-line`) flip under `.theme-light` / `.theme-dark`. | Components are written once and work in both chapter types. On paper, `--muted` is `slate-strong` (#5C616B), which passes AA. Lime is never used as text on light backgrounds. |
-| S2 | Component classes (`.btn`, `.link-draw`, `.emph`, …) live in `@layer components`. | Unlayered CSS beats Tailwind's layered utilities, so `.btn{display:inline-flex}` was overriding `hidden` on the header CTA. Found during the 375px review. |
-| S3 | **One photo grade: mono** (`grayscale(1) contrast(1.06)`), with **colour on hover** for fine pointers. Touch devices see the mono version. OG images use a pre-graded mono headshot. | The photos come from many events with very different white balance. Mono unifies them and lets lime be the only accent colour. |
-| S4 | **The hero has smaller top padding** (`clamp(2rem,3.4vw,3.25rem)`) than the standard section padding. | Header (88px) plus status strip (44px) plus standard padding pushed the CTAs below the fold at 1440×900. Every other section uses the identical `clamp(5rem,10vw,10rem)`. |
-| S5 | Breakpoints: `md` 768 (tablet), `lg` 1024 (two-column hero, horizontal nav, sticky stacking cards), `xl` 1280 (desktop). | The brief's tablet band (768–1279) is wide. The hero and nav get cramped below 1024, so they switch there. |
-| S6 | Venture cards show a **real photograph inside the CSS browser frame** (the team at the annual lunch, and the Pakistan Law Bot event) until product screenshots exist. A screenshot added to `screenshots[]` replaces it automatically. | A fake rendered UI would misrepresent the products. |
-| S7 | Emphasis words are marked with `*asterisks*` in plain content strings. | Copy stays editable without JSX, and one renderer handles the H1/H2 serif italic, the masked-line rise and the OG images. |
-
-## Motion
+### Layout and interaction
 
 | # | Decision | Why |
 |---|---|---|
-| M1 | Motion tokens are defined once in `src/lib/motion.ts` and mirrored as CSS custom properties (`--ease-out`, `--dur-reveal`, `--stagger`, …). | Brief §6.2. |
-| M2 | **The hero choreography is pure CSS** and finishes by 1.4s: grid → eyebrow → word rise → lime underline → copy → clip-path portrait wipe (scale 1.06 → 1) → chips. | The LCP headline and portrait are server-rendered and visible without waiting for JS. Measured LCP is 1.0s on mobile. |
-| M3 | **Shared reveal = server `Reveal` wrapper + one global `RevealObserver`.** The first version used one client component per group. | Mobile TBT fell from 500ms to roughly 100–170ms and Performance rose from 87 to 98. The reveal only hides content when `html.js` is set and motion is allowed, so nothing can get stuck invisible. |
-| M4 | **Three signatures run in pure CSS:** the rotating role (keyframes), the venture inner parallax (`animation-timeline: view()`, ±40px desktop / ±20px tablet), and the philosophy word highlight (named view timeline). | Brief §6.1 allows CSS scroll-driven animation where supported. Browsers without support get a static (fully drawn) version. Parallax frames use `overflow: clip`, not `hidden`, because `hidden` creates a scroll container that captures `view()`. |
-| M5 | Motion (`motion/react`) still drives the pipeline `pathLength` draw and node lighting, the process progress fill and active step, the stacking cards (layout animation, with filters), and the reading-progress bar. Components that only bind MotionValues use `motion/react-m`. The stacking-card explorer is code-split with `next/dynamic`. | These moments need cross-browser scroll-linked JS or layout animation. Splitting keeps the homepage bundle small while there are no projects. |
-| M6 | **Lenis is included but conservative:** fine pointers only, loaded on idle, off under reduced motion and paused while the mobile menu is open. | It smooths the scroll-linked effects on desktop without touching mobile momentum or accessibility. |
-| M7 | **Page transitions use React `<ViewTransition>`** (View Transitions API): a 160ms fade-out and a 280ms fade/slide-in. They are disabled under reduced motion. | Brief §6.4 (≤300ms). Browsers without the API navigate normally. |
-| M8 | **Hover micro-states also transition colour and border colour** (200ms). | These are paint-only and never trigger layout. Every positional or reveal animation uses only transform, opacity, clip-path or filter. |
-| M9 | Under reduced motion: reveals are instant, the ticker is static, there is no parallax, cursor glow, magnetic pull or Lenis, the terminal shows its final text, and the pipeline and process line render fully drawn. | Brief §6.5. Verified in QA (`scripts/qa.mjs`: 0 of 56 reveal items hidden, ticker `animation-name: none`). |
+| L1 | **Homepage sequence:** hero → ticker → Pixelpk figures → 01 Roles → 02 Ventures (dark) → 03 Work → 04 Services → 05 Process → 06 AI lab → 07 About → 08 Culture (dark) → 09 Clients → 10 FAQ → 11 Contact (dark, joined to the footer). Indices are generated from a list, so they stay continuous if a section is switched off. | It follows the reference's narrative while keeping your sequence and symmetry rules. |
+| L2 | **Dark chapters are inset rounded panels** (`.chapter-dark`). The contact panel and footer read as one dark block (CSS `:has()`). | That's how the reference handles its product and contact chapters, and it looks considered. |
+| L3 | **The hero name sits on one line from 1280px up** (`clamp(…13.25rem)`). The credential card sits below the name rather than over it. | With an 11-letter name, the reference's overlap hid "AB". |
+| L4 | **The roles accordion** expands on hover (140ms intent delay), click or Enter, animated with the View Transitions API. Each card keeps one stable button so keyboard focus survives. On mobile and tablet all four cards stack fully open. | It's the reference's signature interaction without animating layout properties, and it stays accessible. |
+| L5 | **Venture cards stack** as sticky siblings. The card underneath recedes through a CSS scroll-driven animation bound to a marker before the next card (`timeline-scope`). Without support, the cards simply stack. | No JavaScript, and a graceful fallback. |
+| L6 | **Work:** six featured projects in a 2×3 grid on the homepage. `/work` shows all 16 with data-driven filter chips that reflow through View Transitions. Case studies run: hero facts → figures → brief and objectives → what we built (dark) → how it works and the architecture → product tour → challenges → stack → next project. | You asked for a well-presented portfolio, and a two-column grid keeps the artwork large. |
+| L7 | **The AI lab** pairs the illustrative terminal with three principles, then **real flows** from four AI products in the portfolio (LawBot, Aivastark, Khurshid Answers, Ask Maududi). The flows are built from each case study's "How it works" steps, and the nodes light up in sequence. | It's truthful: real products and real steps, with the terminal clearly labelled illustrative. |
+| L8 | **Removed from v1:** the Expertise grid (replaced by Pixelpk's nine services), the separate Philosophy section (now a quote in About), the separate status strip (folded into the hero status line), the homepage Insights section (no published articles; `/insights` remains with an honest empty state), and the dev-only work preview fixtures. | Fewer, stronger sections, with real data throughout. |
+| L9 | **Nav:** five numbered items (Work, Ventures, Services, AI lab, About) plus "Let's talk". Insights and Contact live in the menu and footer. | It mirrors the reference's numbered pill nav and fits on one line. |
 
-## Contact form
-
-| # | Decision | Why |
-|---|---|---|
-| F1 | One Zod schema (`src/lib/validation.ts`) is used by the client form and `POST /api/contact`. | Brief §9. |
-| F2 | API outcomes: 200 only when Resend returns a message id; 400 invalid or spam; 429 rate limited; 503 not configured; 502 provider failed. The UI only shows success on 200. | Verified: with no env the API returns 503 and the form shows "The form isn't connected yet…". With a fake Resend key it returns 502 and the form shows an error (never success). The 6th request in 10 minutes returns 429. |
-| F3 | Spam protection: honeypot field, a 3-second minimum time-to-submit, and optional Cloudflare Turnstile (both keys required). Rate limiting uses Upstash when configured and otherwise an in-memory map (best-effort on serverless; documented). | Brief §9. |
-| F4 | The dev-only "Form requires configuration" banner reads env at build time. | The contact page is static. The API checks env on every request. |
-
-## SEO & performance
+### Performance and accessibility
 
 | # | Decision | Why |
 |---|---|---|
-| P1 | The canonical base is `NEXT_PUBLIC_SITE_URL`, then Vercel's `VERCEL_PROJECT_PRODUCTION_URL`, then `VERCEL_URL`, then localhost. | No hard-coded domain until ahmedmusab.com is confirmed (brief §1, §11). |
-| P2 | One branded OG image per page, venture, project and article, built from a single renderer (`src/lib/og.tsx`). | Brief §11. |
-| P3 | Link text: "Read more" links carry screen-reader-only context ("about Pixelpk Technologies"). | Lighthouse SEO `link-text` failed on the first audit. It passes now. |
-| P4 | Security headers (nosniff, referrer policy, frame options, permissions policy) are set in `next.config.ts`. | Best-practice hygiene, with no cost. |
-| P5 | **Header, button and footer links prefetch on intent** (hover, focus or touch via `HoverPrefetchLink`) instead of on entering the viewport. | Every header link is visible on load, so viewport prefetch downloaded each route's JS (Zod, the form, Motion layout code) during page load. Venture-page JS fell from 260KB to 151KB and simulated LCP from 2.9s to 2.1s. Navigation still prefetches before the click. |
-| P6 | Detail-page H1s use the transform-based rise, not an opacity fade. The venture hero image renders statically, with the inner parallax as its motion. | Chrome skips elements at opacity 0 as LCP candidates, so the faded H1/image let a small mono eyebrow become the LCP element. The real largest element now counts. |
-| P7 | Culture gallery images are all `loading="lazy"`. | They sit far below the fold. Eager loading wasted mobile bandwidth on first load. |
+| P1 | LCP images use `loading="eager"` and `fetchPriority="high"`. | Next 16 deprecated `priority`, and its preload didn't raise fetch priority. |
+| P2 | Venture heroes carry their figures in the text column, and `/work` opens with a figure row computed from the data. | On phones, a partly visible screenshot had been the LCP element (3.3s simulated). The text column now paints first (0.9s). |
+| P3 | Logo `<Image>`s get a real `sizes`. | They were downloading 1920px variants for 36px-tall logos. |
+| P4 | Muted text on the crimson role card is solid white. | Translucent white failed contrast (Accessibility 97 → 100). |
+
+## Version 1 decisions that still apply
+
+| # | Decision | Why |
+|---|---|---|
+| D1 | The repo's original files (an unrelated clinic prototype) live in `legacy/alkhidmat-clinic/`. | Nothing was deleted, and it still runs from there. |
+| D2 | Photos come from Ahmed's Google Drive folder (originals in `assets/source/`), optimised into `public/images/`, with EXIF stripped and a dark edge row cropped from two of them. | Real photos, published privately and safely. |
+| D3 | Versions: Next 16.4.5, React 19.3, TypeScript 5.9, ESLint 9, Tailwind 4.3, Motion 14. `cacheComponents` is off. | These are the versions the Next template pins together. The site is fully static, and Cache Components rejects empty `generateStaticParams`. |
+| D4 | The shared reveal is a server `Reveal` wrapper plus one global `RevealObserver`. Signature effects use CSS where possible (marquee, scroll-driven recede, process fill, parallax). | It keeps total blocking time low. |
+| D5 | Under reduced motion, everything is instant and static: no marquee, the terminal shows its final text and the flow diagrams are fully lit. | Brief §6.5, verified by `scripts/qa.mjs`. |
+| D6 | Contact form: one shared Zod schema, a honeypot, a 3-second minimum, optional Turnstile, and Upstash or in-memory rate limiting. Resend runs through `/api/contact`, which returns 200 only when Resend accepts the message; otherwise 503, 502, 429 or 400. | No false success, ever. |
+| D7 | Header, button and footer links prefetch on intent (hover, focus or touch) rather than on entering the viewport. | Viewport prefetching downloaded every route's JavaScript during page load. |
+| D8 | The canonical base URL is `NEXT_PUBLIC_SITE_URL`, then Vercel's production URL, then localhost. Every page gets its own OG image from one renderer. | No hard-coded domain until it's confirmed. |

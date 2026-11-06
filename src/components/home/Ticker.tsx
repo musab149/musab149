@@ -6,10 +6,8 @@ function Row({ hidden = false }: { hidden?: boolean }) {
     <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
       {ticker.map((word) => (
         <li key={word} className="flex items-center">
-          <span className="px-6 text-[clamp(1.25rem,1rem+1.2vw,2rem)] font-semibold tracking-[-0.02em] whitespace-nowrap text-paper xl:px-8">
-            {word}
-          </span>
-          <span className="text-lime" aria-hidden="true">
+          <span className="display-sm whitespace-nowrap px-6 !text-[clamp(1.5rem,1.1rem+1.4vw,2.5rem)] text-paper xl:px-8">{word}</span>
+          <span className="text-[1.25rem] text-accent-bright" aria-hidden="true">
             ✦
           </span>
         </li>
@@ -18,12 +16,12 @@ function Row({ hidden = false }: { hidden?: boolean }) {
   );
 }
 
-/** Dark keyword band between chapter A and B. */
+/** Dark keyword band under the hero. Slows on hover; static under reduced motion. */
 export function Ticker() {
   return (
-    <div className="theme-dark border-y border-line">
-      <h2 className="sr-only">Focus areas</h2>
-      <Marquee className="marquee overflow-hidden py-6 xl:py-8">
+    <div className="chapter-dark theme-dark">
+      <h2 className="sr-only">What I work on</h2>
+      <Marquee className="overflow-hidden py-5 xl:py-6">
         <div className="marquee-track">
           <Row />
           <Row hidden />

@@ -5,7 +5,7 @@ import { createRequire } from "node:module";
 const { chromium } = createRequire(import.meta.url)("playwright");
 
 const base = process.argv[2] || "http://localhost:3200";
-const routes = ["/", "/about", "/ventures", "/ventures/pixelpk-technologies", "/ventures/pakistan-law-bot", "/work", "/ai", "/insights", "/contact", "/privacy"];
+const routes = ["/", "/about", "/ventures", "/ventures/pixelpk-technologies", "/ventures/pakistan-lawbot", "/work", "/work/pakistan-lawbot", "/work/kixx", "/ai", "/insights", "/contact", "/privacy"];
 const widths = [320, 375, 414, 768, 1024, 1280, 1440, 1920];
 const results = { routes: {}, links: {}, external: new Set(), overflow: [], consoleErrors: [], menu: {}, form: {}, reduced: {} };
 const browser = await chromium.launch();

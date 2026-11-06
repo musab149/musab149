@@ -11,7 +11,7 @@ import { InsightCard } from "@/components/insights/InsightCard";
 import { Chip } from "@/components/ui/Chip";
 import { RiseText } from "@/components/ui/Emphasis";
 import { Button } from "@/components/ui/Button";
-import { ContactCTA } from "@/components/home/ContactCTA";
+import { ContactPanel } from "@/components/home/ContactPanel";
 import { pageMetadata } from "@/lib/metadata";
 import { JsonLd, articleSchema } from "@/lib/schema";
 
@@ -47,16 +47,16 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
       <ReadingProgress targetId="article-body" />
       <article className="theme-light">
         <header data-hero="" className="relative isolate overflow-hidden">
-          <div className="hero-grid motif-grid absolute inset-0 -z-10 opacity-80" aria-hidden="true" />
-          <div className="container-site pb-14 pt-[clamp(2.5rem,5vw,5rem)]">
+          <div className="bg-dots absolute inset-0 -z-10" aria-hidden="true" />
+          <div className="container-site pb-14 pt-32 md:pt-36">
             <div className="hero-fade flex flex-wrap items-center gap-3 text-label text-muted">
               <Chip>{post.category}</Chip>
               <time dateTime={post.date}>{formatDate(post.date)}</time>
               <span aria-hidden="true">·</span>
               <span>{post.readingMinutes} min read</span>
-              {post.draft && <Chip tone="lime">Draft · not published</Chip>}
+              {post.draft && <span className="rounded-full bg-accent px-2.5 py-1 text-white">Draft · not published</span>}
             </div>
-            <h1 className="mt-8 max-w-[22ch] text-[clamp(2.25rem,1.4rem+3.6vw,4.5rem)] font-bold leading-[1.04] tracking-[-0.03em] text-fg">
+            <h1 className="display-md mt-8 max-w-[20ch] text-fg">
               <RiseText text={post.title} variant="hero" />
             </h1>
             {post.description && (
@@ -73,7 +73,7 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
         {post.image && (
           <div className="container-site">
             <div className="photo-grade relative aspect-[16/8] overflow-hidden rounded-[4px] bg-card">
-              <Image src={post.image} alt={post.imageAlt ?? ""} fill priority sizes="(min-width: 1280px) 1216px, 94vw" className="object-cover" />
+              <Image src={post.image} alt={post.imageAlt ?? ""} fill loading="eager" fetchPriority="high" sizes="(min-width: 1280px) 1216px, 94vw" className="object-cover" />
             </div>
           </div>
         )}
@@ -101,7 +101,7 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
           <div className="container-site pb-section">
             <div className="hairline mb-14" aria-hidden="true" />
             <div className="mb-10 flex items-end justify-between">
-              <h2 id="related-title" className="text-h3 text-fg">
+              <h2 id="related-title" className="display-sm text-fg">
                 Related <em className="emph">reading</em>
               </h2>
               <Button href="/insights" variant="text">
@@ -118,7 +118,7 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
           </div>
         </section>
       )}
-      <ContactCTA />
+      <ContactPanel />
     </>
   );
 }
